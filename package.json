@@ -1,5 +1,5 @@
 {
-  "name": "webpack-package",
+  "name": "@hexlet/code",
   "version": "0.1.0",
   "description": "",
   "scripts": {
@@ -7,14 +7,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hexlet-boilerplates/webpack-package.git"
+    "url": "git+https://github.com/ivan-nor/frontend-project-lvl3.git"
   },
-  "author": "Kirill Mokevnin",
+  "author": "Ivan Nor",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/hexlet-boilerplates/webpack-package/issues"
+    "url": "https://github.com/ivan-nor/frontend-project-lvl3.git/issues"
   },
-  "homepage": "https://github.com/hexlet-boilerplates/webpack-package#readme",
+  "homepage": "https://github.com/ivan-nor/frontend-project-lvl3.git#readme",
   "jest": {
     "verbose": true,
     "testURL": "http://localhost/",

@@ -7,14 +7,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hexlet-boilerplates/webpack-package.git"
+    "url": "git+https://github.com/ivan-nor/frontend-project-lvl3"
   },
   "author": "Ivan Nor",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/hexlet-boilerplates/webpack-package/issues"
+    "url": "https://github.com/ivan-nor/frontend-project-lvl3/issues"
   },
-  "homepage": "https://github.com/hexlet-boilerplates/webpack-package#readme",
+  "homepage": "https://github.com/ivan-nor/frontend-project-lvl3#readme",
   "jest": {
     "verbose": true,
     "testURL": "http://localhost/",
@@ -41,6 +41,7 @@
     "jest-cli": "^27.1.1",
     "postcss-loader": "^6.1.1",
     "postcss-preset-env": "^6.7.0",
+    "sass-loader": "^13.1.0",
     "style-loader": "^3.2.1",
     "url-loader": "^4.1.1",
     "webpack": "^5.52.0",
@@ -48,8 +49,8 @@
     "webpack-dev-server": "^4.1.1"
   },
   "dependencies": {
+    "bootstrap": "^5.2.2",
     "npm-check-updates": "^16.3.9",
-    "sass": "^1.39.0",
-    "sass-loader": "^12.1.0"
+    "sass": "^1.39.0"
   }
 }

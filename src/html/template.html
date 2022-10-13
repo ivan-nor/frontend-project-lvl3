@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+  <head>
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
+  <body>
+    <div id="point">
+      <form class="row g-3">
+        <div class="mb-3 p-3 form-group">
+          <label for="rssInput" class="form-label"></label>
+          <input class="form-control" id="rssInput" rows="1" required aria-describedby="rssInputFeedback"></input>
+          <div id="rssInputFeedback" class="invalid-feedback"></div>
+          <!-- <div class="valid-feedback">Ссылка валидна!!!!!</div> -->
+          <button type="submit" class="btn btn-primary p-1 mt-3"></button>
+        </div>
+      </form>
+      <div id="content"></div>
+    </div>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </body>
+</html>

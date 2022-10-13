@@ -21,7 +21,7 @@ export default (container, state, i18nInstance) => {
     const [path, value] = args;
     console.log(`WATCHER CASE state.${path} = ${value}`);
     button.disabled = false;
-    input.focus();
+    // input.focus();
     input.classList.add('is-invalid');
     switch (path) {
       case 'process':
@@ -44,7 +44,7 @@ export default (container, state, i18nInstance) => {
           input.classList.remove('is-invalid');
           input.classList.remove('is-valid');
         }
-        input.focus();
+        // input.focus();
         break;
       case 'urls':
         ul.innerHTML = '';

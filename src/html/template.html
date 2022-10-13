@@ -5,14 +5,34 @@
   </head>
   <body>
     <div id="point">
-      <form class="row g-3">
-        <div class="mb-3 p-3 form-group">
-          <label for="rssInput" class="form-label"></label>
-          <input class="form-control" id="rssInput" rows="1" required aria-describedby="rssInputFeedback"></input>
+      <form class="row g-3 m-3 p-3">
+        <!-- <div class="form-floating m-3 p-3">
+          <label for="rssInput">AFAF</label>
+          <input
+            type="text"
+            class="form-control"
+            id="rssInput"
+            placeholder=""
+            rows="1"
+            required
+            aria-describedby="rssInputFeedback"
+          >
+          <button type="submit" class="btn btn-primary p-1 mt-3"></button>
           <div id="rssInputFeedback" class="invalid-feedback"></div>
-          <!-- <div class="valid-feedback">Ссылка валидна!!!!!</div> -->
+        </div> -->
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" id="rssInput" placeholder="Input your RSS-link here" required aria-describedby="rssInputFeedback">
+          <label for="rssInput">Input your RSS-link here:</label>
+          <div id="rssInputFeedback" class="invalid-feedback"></div>
           <button type="submit" class="btn btn-primary p-1 mt-3"></button>
         </div>
+        <!-- <div class="m-3 p-3">
+          <input type="email" class="form-control" id="rssInput" rows="1" required aria-describedby="rssInputFeedback"></input>
+          <label for="rssInput" class="form-label"></label>
+          <div id="rssInputFeedback" class="invalid-feedback"></div>
+          <div class="valid-feedback">Ссылка валидна!!!!!</div>
+          <button type="submit" class="btn btn-primary p-1 mt-3"></button>
+        </div> -->
       </form>
       <div id="content"></div>
     </div>

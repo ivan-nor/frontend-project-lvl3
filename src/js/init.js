@@ -34,7 +34,7 @@ export default async (container, initialState = {}) => {
 
   form.addEventListener('submit', submitHandler(watchedState));
   input.addEventListener('input', inputHandler(watchedState));
-  input.focus();
+  // input.focus();
   button.disabled = false;
 
   const testURL = 'https://ru.hexlet.io/lessons.rss';

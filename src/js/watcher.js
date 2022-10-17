@@ -46,7 +46,7 @@ export default (container, state, i18nInstance) => {
         // input.focus();
         break;
       case 'channels':
-        render(feedsElement, postsElement, this.channels);
+        render(feedsElement, postsElement, state.channels);
 
         input.classList.remove('is-invalid');
         input.classList.remove('is-valid');

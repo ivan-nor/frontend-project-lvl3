@@ -22,7 +22,6 @@ export default async (container, initialState = {}) => {
     isValid: true,
     errorMessages: {},
     channels: [],
-    // urls: [],
   };
 
   console.log('INIT');

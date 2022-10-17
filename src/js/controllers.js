@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import _, { uniqueId } from 'lodash';
 import validate from './validator';
 import parse from './parser';
 
@@ -26,7 +26,7 @@ const submitHandler = (watchedState) => (event) => {
   let { process, inputValue, channels } = watchedState;
   process = 'sending';
 
-  fetch(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(testURL)}`)
+  fetch(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(testURL3)}`)
     .then((response) => {
       if (response.ok) {
         process = 'success';
@@ -38,7 +38,9 @@ const submitHandler = (watchedState) => (event) => {
       console.log('DATA WAS LOAD');
       const parsed = parse(data.contents);
       const { channelTitle, channelDescription, posts } = parsed;
-      channels.push({ channelTitle, channelDescription, posts, url: inputValue });
+      const mappedPosts = posts.map((post) => ({ ...post, postId: uniqueId() }));
+      // console.log(mappedPosts);
+      channels.push({ channelTitle, channelDescription, posts: mappedPosts, url: inputValue, channelId: uniqueId() });
     });
 };
 

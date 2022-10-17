@@ -21,11 +21,32 @@ const createCardElement = (title) => {
   return card;
 };
 
+const renderModal = ({ title, description, pubDate, link, postId }) => (event) => {
+  event.preventDefault();
+  const modal = document.querySelector('.modal');
+  const modalTitle = document.querySelector('.modal-title')
+  console.log(modal, modalTitle, modalBody, modalA);
+  modalTitle.textContent = '';
+  const modalBody = document.querySelector('.modal-body');
+  modalBody.textContent = '';
+  const modalA = document.querySelector('.modal-footer > a');
+  modalA.setAttribute('href', '#');
+
+  modalTitle.textContent = title;
+  modalBody.textContent = description;
+  modalA.setAttribute('href', link);
+
+  const a = event.target.parentNode.querySelector('a')
+  console.log(a);
+  a.className = 'fw-normal link-secondary';
+}
+
 export default (feedsElement, postsElement, channels) => {
   feedsElement.innerHTML = '';
   postsElement.innerHTML = '';
 
-  console.log(feedsElement, postsElement, channels);
+
+
   const feedsCard = createCardElement('Фиды');
   const feedsUl = feedsCard.querySelector('ul');
   feedsCard.append(feedsUl);
@@ -34,11 +55,13 @@ export default (feedsElement, postsElement, channels) => {
   const postUl = postsCard.querySelector('ul');
   postsCard.append(postUl);
 
-  channels.forEach(({ channelTitle, channelDescription, posts, url }) => {
-    const titleElement = document.createElement('span');
+  channels.forEach(({ channelTitle, channelDescription, posts }) => {
+    const titleElement = document.createElement('h3');
+    titleElement.classList.add('h6', 'm-0');
     titleElement.innerHTML = channelTitle;
   
-    const descriptionElement = document.createElement('span');
+    const descriptionElement = document.createElement('p');
+    descriptionElement.classList.add('m-0', 'small', 'text-black-50');
     descriptionElement.innerHTML = channelDescription;
   
     const feedsLi = document.createElement('li');
@@ -46,22 +69,29 @@ export default (feedsElement, postsElement, channels) => {
     feedsLi.classList.add('list-group-item', 'border-0', 'border-end-0');
     feedsUl.append(feedsLi);
 
-    _.sortBy(posts, (post) => post.pubDate).forEach(({ title, description, pubDate, link }) => {
-      const postTitle = document.createElement('span');
-      postTitle.className = '';
-      postTitle.innerHTML = title;
-  
-      const postDescription = document.createElement('span');
-      postDescription.innerHTML = description;
-      postDescription.className = '';
-  
-      const postLink = document.createElement('span');
-      postLink.innerHTML = link;
-      postLink.className = '';
-  
+    _.sortBy(posts, (post) => post.postId).forEach(({ title, description, pubDate, link, postId }) => {
+
       const postsLi = document.createElement('li');
-      postsLi.append(postTitle, postDescription, postLink);
-      postsLi.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
+
+      const postA = document.createElement('a');
+      postA.setAttribute('href', link);
+      postA.setAttribute('target', '_blank');
+      postA.setAttribute('rel', 'noopener noreferrer');
+      postA.setAttribute('data-id', postId);
+      postA.classList.add('fw-bold');
+      postA.textContent = description;
+
+      const postButton = document.createElement('button');
+      postButton.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+      postButton.setAttribute('data-id', postId);
+      postButton.setAttribute('type', 'button');
+      postButton.setAttribute('data-bs-toggle', 'modal')
+      postButton.setAttribute('data-bs-target', '#exampleModal')
+      postButton.textContent = 'Просмотр';
+      postButton.addEventListener('click', renderModal({ title, description, pubDate, link, postId }));
+
+      postsLi.append(postA, postButton);
+      postsLi.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0', 'mr-1');
       postUl.append(postsLi);
     });
   });
@@ -72,31 +102,3 @@ export default (feedsElement, postsElement, channels) => {
   }
 };
 
-// export const renderFeeds = (channels) => {
-//   const feedsCard = createCardElement('Фиды');
-//   const feedsUl = feedsCard.querySelector('ul');
-//   feedsCard.append(feedsUl);
-
-//   channels.forEach(({ channelTitle, channelDescription }) => {
-//     const titleElement = document.createElement('span');
-//     titleElement.innerHTML = channelTitle;
-  
-//     const descriptionElement = document.createElement('span');
-//     descriptionElement.innerHTML = channelDescription;
-  
-//     const feedsLi = document.createElement('li');
-//     feedsLi.append(titleElement, descriptionElement);
-//     feedsUl.append(feedsLi);
-//   })
-//   return feedsCard;
-// };
-
-// export const renderPosts = (channels) => {
-//   const card = createCardElement('Посты');
-//   const postUl = card.querySelector('ul');
-//   _.sortBy(posts, (post) => post.pubDate).forEach(({ title, description, link, pubDate }) => {
-    
-//   });
-
-//   return card;
-// };

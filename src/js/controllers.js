@@ -1,44 +1,45 @@
 import _ from 'lodash';
 import validate from './validator';
+import parse from './parser';
 
 const testURL = 'https://ru.hexlet.io/lessons.rss';
 const testURL2 = 'https://api.github.com/repos/javascript-tutorial/en.javascript.info/commits';
-let counterClicks = 0;
-const count = () => {
-  counterClicks += 1;
-  return counterClicks;
-};
+const testURL3 = 'http://lorem-rss.herokuapp.com/feed?unit=second&interval=30';
 
-const inputHandler = (watcher) => (event) => {
-  const watchedState = watcher;
+// let counterClicks = 0; // реализация счетчика кликов
+// const count = () => {
+//   counterClicks += 1;
+//   return counterClicks;
+// };
+
+const inputHandler = (watchedState) => (event) => {
   event.preventDefault();
+  // let { inputValue, isValid, errorMessages } = watchedState;
   watchedState.inputValue = event.target.value;
-  const errorMessages = validate(watchedState.inputValue);
-  watchedState.isValid = _.isEmpty(errorMessages) || watchedState.inputValue === '';
-  watchedState.errorMessages = errorMessages;
+  const newErrorMessages = validate(watchedState.inputValue);
+  watchedState.isValid = _.isEmpty(newErrorMessages) || watchedState.inputValue === '';
+  watchedState.errorMessages = newErrorMessages;
 };
 
 const submitHandler = (watchedState) => (event) => {
-  let { process, inputValue, urls } = watchedState;
   event.preventDefault();
+  let { process, inputValue, channels } = watchedState;
   process = 'sending';
-  urls.push({ url: inputValue, content: count() });
-  // fetch(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(testURL)}`)
-  //   .then((response) => {
-  //     if (response.ok) {
-  //       watchedState.process = 'success';
-  //       return response.json();
-  //     }
-  //     throw new Error('Network response was not ok.');
-  //   })
-  //   .then((data) => {
-  //     console.log('DATA WAS LOAD');
-  //     console.log(data.contents);
-  //     watchedState.lists.push({
-  //       url: testURL,
-  //       data: data.contents,
-  //     });
-  //   });
+
+  fetch(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(testURL)}`)
+    .then((response) => {
+      if (response.ok) {
+        process = 'success';
+        return response.json();
+      }
+      throw new Error('Network response was not ok.');
+    })
+    .then((data) => {
+      console.log('DATA WAS LOAD');
+      const parsed = parse(data.contents);
+      const { channelTitle, channelDescription, posts } = parsed;
+      channels.push({ channelTitle, channelDescription, posts, url: inputValue });
+    });
 };
 
 export { inputHandler, submitHandler };

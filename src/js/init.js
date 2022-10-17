@@ -21,7 +21,8 @@ export default async (container, initialState = {}) => {
     inputValue: '',
     isValid: true,
     errorMessages: {},
-    urls: [],
+    channels: [],
+    // urls: [],
   };
 
   console.log('INIT');
@@ -29,13 +30,17 @@ export default async (container, initialState = {}) => {
 
   const form = container.querySelector('form');
   const input = form.querySelector('input');
-  // const content = container.querySelector('#content');
   const button = form.querySelector('button');
+
+  const a = container.querySelector('#google'); // затычка для быстрого ввода ссылок
+  a.addEventListener('click', (event) => {
+    event.preventDefault();
+    // console.log((event.target))
+    input.value = event.target.textContent;
+  });
 
   form.addEventListener('submit', submitHandler(watchedState));
   input.addEventListener('input', inputHandler(watchedState));
-  // input.focus();
+  input.focus();
   button.disabled = false;
-
-  const testURL = 'https://ru.hexlet.io/lessons.rss';
 };

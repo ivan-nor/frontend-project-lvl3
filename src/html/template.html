@@ -1,41 +1,52 @@
 <!doctype html>
 <html>
-  <head>
-    <title><%= htmlWebpackPlugin.options.title %></title>
-  </head>
-  <body>
-    <div id="point">
-      <form class="row g-3 m-3 p-3">
-        <!-- <div class="form-floating m-3 p-3">
-          <label for="rssInput">AFAF</label>
-          <input
-            type="text"
-            class="form-control"
-            id="rssInput"
-            placeholder=""
-            rows="1"
-            required
-            aria-describedby="rssInputFeedback"
-          >
-          <button type="submit" class="btn btn-primary p-1 mt-3"></button>
-          <div id="rssInputFeedback" class="invalid-feedback"></div>
-        </div> -->
-        <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="rssInput" placeholder="Input your RSS-link here" required aria-describedby="rssInputFeedback">
-          <label for="rssInput">Input your RSS-link here:</label>
-          <div id="rssInputFeedback" class="invalid-feedback"></div>
-          <button type="submit" class="btn btn-primary p-1 mt-3"></button>
+
+<head>
+  <title>
+    <%= htmlWebpackPlugin.options.title %>
+  </title>
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+  <main class="flex-grow-1">
+    <section class="container-fluid bg-dark p-5">
+      <div class="row">
+        <div id="point" class="col-md-10 col-lg-8 mx-auto text-white">
+          <h1 class="display-3 mb-0">RSS агрегатор</h1>
+          <p class="lead">Начните читать RSS сегодня! Это легко, это красиво.</p>
+          <a href="#" value="http://google.com" id="google">https://google.com</a>
+          <form action class="rss-form text-body">
+            <div class="row">
+              <div class="col">
+                <div class="form-floating">
+                  <input type="text" class="form-control w-100" id="rssInput" placeholder="Input your RSS-link here"
+                    required aria-describedby="rssInputFeedback" autocomplete="off">
+                  <label for="rssInput">Input your RSS-link here:</label>
+                  <div id="rssInputFeedback" class="invalid-feedback"></div>
+                </div>
+              </div>
+              <div class="col-auto">
+                <button type="submit" class="h-100 btn btn-lg btn-primary px-sm-5"></button>
+              </div>
+            </div>
+          </form>
+          <p class="mt-2 mb-0 text-muted">Пример: https://ru.hexlet.io/lessons.rss</p>
+          <p class="feedback m-0 position-absolute small text-success">RSS успешно загружен</p>
         </div>
-        <!-- <div class="m-3 p-3">
-          <input type="email" class="form-control" id="rssInput" rows="1" required aria-describedby="rssInputFeedback"></input>
-          <label for="rssInput" class="form-label"></label>
-          <div id="rssInputFeedback" class="invalid-feedback"></div>
-          <div class="valid-feedback">Ссылка валидна!!!!!</div>
-          <button type="submit" class="btn btn-primary p-1 mt-3"></button>
-        </div> -->
-      </form>
-      <div id="content"></div>
-    </div>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-  </body>
+      </div>
+    </section>
+    <section class="container-fluid container-xxl p-5">
+      <div class="row">
+        <div class="col-md-10 col-lg-8 order-1 mx-auto" id="posts">
+
+        </div>
+        <div class="col-md-10 col-lg-4 mx-auto order-0 order-lg-1" id="feeds">
+          
+        </div>
+      </div>
+    </section>
+  </main>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</body>
+
 </html>

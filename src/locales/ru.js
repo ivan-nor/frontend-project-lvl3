@@ -3,7 +3,7 @@ export default {
     languages: {
       ru: 'Русский',
     },
-    submit: 'Отправить',
+    submit: 'Добавить',
     invalidFeedback: 'Пожалуйста, введите корректную ссылку.',
     label: 'Введите rss-ссылку, например http://google.com',
   },

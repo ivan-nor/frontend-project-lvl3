@@ -1,27 +1,26 @@
 import onChange from 'on-change';
+import render from './renders';
 
 export default (container, state, i18nInstance) => {
   console.log('RUN SET WATCHER');
   const form = container.querySelector('form');
   const input = form.querySelector('input');
-  const content = container.querySelector('#content');
+  const postsElement = document.querySelector('#posts');
+  const feedsElement = document.querySelector('#feeds');
+
   const button = form.querySelector('button');
-  console.log('button text in instanse i18next', i18nInstance.t('buttons.submit'));
   button.innerHTML = i18nInstance.t('submit');
+
   const invalidFeedback = form.querySelector('.invalid-feedback');
   invalidFeedback.innerHTML = i18nInstance.t('invalidFeedback');
+
   const label = form.querySelector('label');
   label.innerHTML = i18nInstance.t('label');
-  // const feedBack = form.querySelector('');
-  const ul = document.createElement('ul');
-  content.append(ul);
 
   // eslint-disable-next-line func-names
   return onChange(state, function (...args) {
     const [path, value] = args;
-    console.log(`WATCHER CASE state.${path} = ${value}`);
     button.disabled = false;
-    // input.focus();
     input.classList.add('is-invalid');
     switch (path) {
       case 'process':
@@ -46,13 +45,9 @@ export default (container, state, i18nInstance) => {
         }
         // input.focus();
         break;
-      case 'urls':
-        ul.innerHTML = '';
-        this.urls.forEach(({ url, response }) => {
-          const li = document.createElement('li');
-          li.innerHTML = `${url}     _____<--->_____     ${response}`;
-          ul.append(li);
-        });
+      case 'channels':
+        render(feedsElement, postsElement, this.channels);
+
         input.classList.remove('is-invalid');
         input.classList.remove('is-valid');
         form.reset();

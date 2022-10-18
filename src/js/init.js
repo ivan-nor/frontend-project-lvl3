@@ -1,7 +1,5 @@
 // @ts-check
 import i18n from 'i18next';
-import Parser from 'rss-parser';
-import parse from 'rss-to-json';
 import 'regenerator-runtime/runtime';
 import resources from '../locales/index.js';
 import { inputHandler, submitHandler } from './controllers';
@@ -34,7 +32,7 @@ export default async (container, initialState = {}) => {
   const a = container.querySelector('#google'); // затычка для быстрого ввода ссылок
   a.addEventListener('click', (event) => {
     event.preventDefault();
-    // console.log((event.target))
+    state.inputValue = event.target.textContent;
     input.value = event.target.textContent;
   });
 

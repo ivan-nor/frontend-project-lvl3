@@ -1,5 +1,5 @@
 import onChange from 'on-change';
-import render from './renders';
+import { renderContent } from './renders';
 
 export default (container, state, i18nInstance) => {
   console.log('RUN SET WATCHER');
@@ -19,7 +19,7 @@ export default (container, state, i18nInstance) => {
 
   // eslint-disable-next-line func-names
   return onChange(state, function (...args) {
-    const [path, value] = args;
+    const [path] = args;
     button.disabled = false;
     input.classList.add('is-invalid');
     switch (path) {
@@ -46,7 +46,7 @@ export default (container, state, i18nInstance) => {
         // input.focus();
         break;
       case 'channels':
-        render(feedsElement, postsElement, state.channels);
+        renderContent(feedsElement, postsElement, state.channels);
 
         input.classList.remove('is-invalid');
         input.classList.remove('is-valid');

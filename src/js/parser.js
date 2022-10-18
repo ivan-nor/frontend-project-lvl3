@@ -4,7 +4,6 @@ export default (stringContainingXMLSource) => {
   const items = doc.querySelectorAll('item');
   const channelTitle = doc.querySelector('channel > title');
   const channelDescription = doc.querySelector('channel > description');
-  
 
   const channel = {
     channelTitle: channelTitle.textContent,
@@ -13,12 +12,16 @@ export default (stringContainingXMLSource) => {
   };
 
   items.forEach((item) => {
-    const [title, description, link, pubDate] = item.childNodes;
+    const title = item.querySelector('title').textContent;
+    const description = item.querySelector('description').textContent;
+    const link = item.querySelector('link').textContent;
+    const pubDate = item.querySelector('pubDate').textContent;
+
     channel.posts.push({
-      title: title.textContent,
-      description: description.textContent,
-      link: link.textContent,
-      pubDate: pubDate.textContent,
+      title,
+      description,
+      link,
+      pubDate,
     });
   });
   return channel;

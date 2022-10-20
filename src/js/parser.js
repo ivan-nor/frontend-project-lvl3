@@ -22,6 +22,7 @@ export default (stringContainingXMLSource) => {
       description,
       link,
       pubDate,
+      pubDateMs: Date.parse(pubDate),
     });
   });
   return channel;

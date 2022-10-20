@@ -1,22 +1,20 @@
-import _, { uniqueId } from 'lodash';
+import { isEmpty } from 'lodash';
+import axios from 'axios';
 import validate from './validator';
 import parse from './parser';
-import { renderModal } from './renders';
 
-const testURL = 'https://ru.hexlet.io/lessons.rss';
-const testURL2 = 'https://api.github.com/repos/javascript-tutorial/en.javascript.info/commits';
-const testURL3 = 'http://lorem-rss.herokuapp.com/feed?unit=second&interval=30';
+const proxy = 'https://allorigins.hexlet.app/get?url=';
 
-let counterClicks = 0; // реализация счетчика кликов
-const count = () => {
-  counterClicks += 1;
-  return counterClicks;
-};
+// let counter = 0; // реализация счетчика кликов
+// const count = () => {
+//   counter += 1;
+//   return counter;
+// };
 
-const clickPostHandler = (post) => (event) => {
+const clickPostHandler = (post, renderModalFunction) => (event) => {
   if (event.target.tagName === 'BUTTON') {
     event.preventDefault();
-    renderModal(post);
+    renderModalFunction(post);
   }
   post.visited = true;
   const a = event.target.parentNode.firstElementChild;
@@ -26,40 +24,40 @@ const clickPostHandler = (post) => (event) => {
 const inputHandler = (watchedState) => (event) => {
   event.preventDefault();
   watchedState.inputValue = event.target.value;
-  const newErrorMessages = validate(watchedState.inputValue);
-  watchedState.isValid = _.isEmpty(newErrorMessages) || watchedState.inputValue === '';
+  const newErrorMessages = validate(watchedState.inputValue, watchedState.feeds);
+  watchedState.isValid = isEmpty(newErrorMessages) || watchedState.inputValue === '';
   watchedState.errorMessages = newErrorMessages;
 };
 
 const submitHandler = (watchedState) => (event) => {
+  // const { feeds: feeds1, posts: posts1 } = watchedState;
   event.preventDefault();
-  let { process, inputValue, channels } = watchedState;
-  process = 'sending';
+  watchedState.process = 'sending';
+  console.log('click SUBMIT');
+  const requestURL = `${proxy}${encodeURIComponent(watchedState.inputValue)}`;
 
-  const fetchPromise = fetch(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(inputValue)}`)
+  axios.get(requestURL)
     .then((response) => {
-      if (response.ok) {
-        process = 'success';
-        return response.json();
+      // console.log(response);
+      watchedState.process = 'success';
+      const contentType = response.data.status.content_type;
+      const contentUrl = response.data.status.url;
+      if (contentType.includes('xml')) {
+        const parsed = parse(response.data.contents);
+        const { channelTitle, channelDescription, posts } = parsed;
+        watchedState.feeds.push({ url: contentUrl, channelTitle, channelDescription });
+        watchedState.posts.push(...posts);
+      } else {
+        watchedState.errorMessages = ['not rss!'];
       }
-      throw new Error('Network response was not ok.');
+      return response.data.contents;
     })
-    .then((data) => {
-      console.log('DATA WAS LOAD');
-      const parsed = parse(data.contents);
-      const { channelTitle, channelDescription, posts } = parsed;
-      const mappedPosts = posts.map((post) => ({ ...post, postId: uniqueId() }));
-      channels.push({
-        channelTitle,
-        channelDescription,
-        posts: mappedPosts,
-        url: inputValue,
-        channelId: uniqueId(),
-        visited: false,
-      });
-    });
+    .catch((error) => { throw new Error(error); });
+  // .then((data) => {
+  // });
+  // .then(() => {
 
-  Promise.all([fetchPromise]).then(console.log);
+  // }); // добавить отрисовку ошибки в ivalid-feedback
 };
 
 export {

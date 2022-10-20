@@ -87,7 +87,7 @@ export const renderContent = (feedsElement, postsElement, channels) => {
       postButton.setAttribute('data-bs-toggle', 'modal');
       postButton.setAttribute('data-bs-target', '#exampleModal');
       postButton.textContent = 'Просмотр';
-      postButton.addEventListener('click', clickPostHandler(post));
+      postButton.addEventListener('click', clickPostHandler(post, renderModal));
 
       postsLi.append(postA, postButton);
       postsLi.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0', 'mr-1');

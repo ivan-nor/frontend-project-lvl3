@@ -29,12 +29,21 @@ export const renderModal = ({
   const modalTitle = document.querySelector('.modal-title');
   modalTitle.textContent = '';
   const modalBody = document.querySelector('.modal-body');
-  modalBody.textContent = '';
+  modalBody.innerHTML = '';
   const modalA = document.querySelector('.modal-footer > a');
   modalA.setAttribute('href', '#');
 
+  const textContainer = document.createElement('div');
+  textContainer.classList.add('container', 'p-1');
+
+  const descriptionHTML = new DOMParser().parseFromString(description, 'text/html');
+  const imgElements = descriptionHTML.querySelectorAll('img');
+  imgElements.forEach((img) => {
+    img.classList.add('img-fluid');
+  });
+  descriptionHTML.body.childNodes.forEach((el) => textContainer.append(el));
+  modalBody.append(textContainer);
   modalTitle.textContent = title;
-  modalBody.textContent = description;
   modalA.setAttribute('href', link);
 };
 
@@ -67,10 +76,11 @@ export const renderContent = (feedsElement, postsElement, feeds, posts) => {
     feedsUl.append(feedsLi);
   });
 
-  _.sortBy(posts, 'pubDate').reverse().forEach((post) => {
+  _.sortBy(posts, 'pubDateMs').reverse().forEach((post) => {
     const {
-      title, link, postId, visited,
+      title, link, postId, visited, pubDate, pubDateMs,
     } = post;
+    console.log(pubDate, pubDateMs);
     const postsLi = document.createElement('li');
 
     const postA = document.createElement('a');

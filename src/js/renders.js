@@ -25,7 +25,7 @@ const createCardElement = (title) => {
 export const renderModal = ({
   title, description, link,
 }) => {
-  console.log('title', title, 'descrip', description, 'link', link);
+  // console.log('title', title, 'descrip', description, 'link', link);
   const modalTitle = document.querySelector('.modal-title');
   modalTitle.textContent = '';
   const modalBody = document.querySelector('.modal-body');
@@ -38,10 +38,11 @@ export const renderModal = ({
   modalA.setAttribute('href', link);
 };
 
-export const renderContent = (feedsElement, postsElement, channels) => {
+export const renderContent = (feedsElement, postsElement, feeds, posts) => {
   console.log('RENDER CONTENT');
   feedsElement.innerHTML = '';
   postsElement.innerHTML = '';
+  // console.log(feedsElement.innerHTML, postsElement.innerHTML, feeds, posts);
 
   const feedsCard = createCardElement('Фиды');
   const feedsUl = feedsCard.querySelector('ul');
@@ -51,7 +52,7 @@ export const renderContent = (feedsElement, postsElement, channels) => {
   const postUl = postsCard.querySelector('ul');
   postsCard.append(postUl);
 
-  channels.forEach(({ channelTitle, channelDescription, posts }) => {
+  feeds.forEach(({ channelTitle, channelDescription }) => {
     const titleElement = document.createElement('h3');
     titleElement.classList.add('h6', 'm-0');
     titleElement.innerHTML = channelTitle;
@@ -64,39 +65,37 @@ export const renderContent = (feedsElement, postsElement, channels) => {
     feedsLi.append(titleElement, descriptionElement);
     feedsLi.classList.add('list-group-item', 'border-0', 'border-end-0');
     feedsUl.append(feedsLi);
-
-    _.sortBy(posts, (post) => post.postId).forEach((post) => {
-      const {
-        title, link, postId, visited,
-      } = post;
-      const postsLi = document.createElement('li');
-
-      const postA = document.createElement('a');
-      postA.setAttribute('href', link);
-      postA.setAttribute('target', '_blank');
-      postA.setAttribute('rel', 'noopener noreferrer');
-      postA.setAttribute('data-id', postId);
-      postA.className = visited ? 'fw-normal link-secondary' : 'fw-bold';
-      postA.textContent = title;
-      postA.addEventListener('click', clickPostHandler(post));
-
-      const postButton = document.createElement('button');
-      postButton.classList.add('btn', 'btn-outline-primary', 'btn-sm');
-      postButton.setAttribute('data-id', postId);
-      postButton.setAttribute('type', 'button');
-      postButton.setAttribute('data-bs-toggle', 'modal');
-      postButton.setAttribute('data-bs-target', '#exampleModal');
-      postButton.textContent = 'Просмотр';
-      postButton.addEventListener('click', clickPostHandler(post, renderModal));
-
-      postsLi.append(postA, postButton);
-      postsLi.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0', 'mr-1');
-      postUl.append(postsLi);
-    });
   });
 
-  if (channels.length) {
-    feedsElement.append(feedsCard);
-    postsElement.append(postsCard);
-  }
+  _.sortBy(posts, 'pubDate').reverse().forEach((post) => {
+    const {
+      title, link, postId, visited,
+    } = post;
+    const postsLi = document.createElement('li');
+
+    const postA = document.createElement('a');
+    postA.setAttribute('href', link);
+    postA.setAttribute('target', '_blank');
+    postA.setAttribute('rel', 'noopener noreferrer');
+    postA.setAttribute('data-id', postId);
+    postA.className = visited ? 'fw-normal link-secondary' : 'fw-bold';
+    postA.textContent = title;
+    postA.addEventListener('click', clickPostHandler(post));
+
+    const postButton = document.createElement('button');
+    postButton.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+    postButton.setAttribute('data-id', postId);
+    postButton.setAttribute('type', 'button');
+    postButton.setAttribute('data-bs-toggle', 'modal');
+    postButton.setAttribute('data-bs-target', '#exampleModal');
+    postButton.textContent = 'Просмотр';
+    postButton.addEventListener('click', clickPostHandler(post, renderModal));
+
+    postsLi.append(postA, postButton);
+    postsLi.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0', 'mr-1');
+    postUl.append(postsLi);
+  });
+
+  if (feeds.length) { feedsElement.append(feedsCard); }
+  if (posts.length) { postsElement.append(postsCard); }
 };

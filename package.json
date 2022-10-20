@@ -62,9 +62,8 @@
     "npm-check-updates": "^16.3.9",
     "on-change": "^4.0.1",
     "regenerator-runtime": "^0.13.9",
-    "rss-parser": "^3.12.0",
-    "rss-to-json": "^2.1.0",
     "sass": "^1.39.0",
+    "xml-js": "^1.6.11",
     "yup": "^0.32.11"
   }
 }

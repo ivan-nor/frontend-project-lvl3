@@ -7,37 +7,61 @@ import setWatcher from './watcher';
 
 export default (container, initialState = {}) => {
   const { lng = 'ru' } = initialState;
+  // console.log('container :>> ', container);
 
   i18n.createInstance({ lng, resources }, (err, t) => {
     if (err) return console.log('something went wrong loading', err);
+    console.log('INIT');
 
     const state = {
-      process: 'input',
+      process: 'input', // input, sending, success
       inputValue: '',
-      isValid: true,
       errorMessages: {},
       feeds: [],
       posts: [],
     };
 
-    console.log('INIT');
-    const watchedState = setWatcher(container, state, t);
+    const elements = {
+      form: container.querySelector('.rss-form'),
+      input: container.querySelector('#rssInput'),
+      button: container.querySelector('button[type="submit"]'),
+      label: container.querySelector('label'),
+      feedback: container.querySelector('.feedback'),
+      example: container.querySelector('p.text-muted'),
+      feeds: container.querySelector('#feeds'),
+      posts: container.querySelector('#posts'),
+      title: container.querySelector('#title'),
+      lead: container.querySelector('#lead'),
+      modal: {
+        title: container.querySelector('.modal-title'),
+        body: container.querySelector('.modal-body'),
+        link: container.querySelector('.modal-footer > a'),
+        button: container.querySelector('.modal-footer > button'),
+      },
+    };
 
-    const form = container.querySelector('form');
-    const input = form.querySelector('input');
-    // const button = form.querySelector('button');
+    // console.log('elements :>> ', elements);
 
     const a = container.querySelector('#google'); // затычка для быстрого ввода ссылок
     a.addEventListener('click', (event) => {
       event.preventDefault();
       state.inputValue = event.target.textContent;
-      input.value = event.target.textContent;
+      elements.input.value = event.target.textContent;
     });
 
-    form.addEventListener('submit', submitHandler(watchedState));
-    input.addEventListener('input', inputHandler(watchedState));
-    input.focus();
-    // button.disabled = false;
+    const watchedState = setWatcher(elements, state, t);
+
+    elements.title.innerHTML = t('title');
+    elements.lead.innerHTML = t('lead');
+    elements.button.innerHTML = t('submit');
+    elements.label.innerHTML = t('label');
+    elements.example.innerHTML = t('example');
+    elements.form.addEventListener('submit', submitHandler(watchedState));
+    elements.input.addEventListener('input', inputHandler(watchedState));
+    elements.input.focus();
+    elements.modal.link.innerHTML = t('modal.link');
+    elements.modal.button.innerHTML = t('modal.button');
+
 
     return null; // требования линтера
   });

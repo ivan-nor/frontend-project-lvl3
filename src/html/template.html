@@ -7,7 +7,7 @@
   </title>
 </head>
 
-<body class="d-flex flex-column min-vh-100">
+<body id="point" class="d-flex flex-column min-vh-100">
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -34,9 +34,9 @@
   <main class="flex-grow-1">
     <section class="container-fluid bg-dark p-5">
       <div class="row">
-        <div id="point" class="col-md-10 col-lg-8 mx-auto text-white">
-          <h1 class="display-3 mb-0">RSS агрегатор</h1>
-          <p class="lead">Начните читать RSS сегодня! Это легко, это красиво.</p>
+        <div class="col-md-10 col-lg-8 mx-auto text-white">
+          <h1 id="title" class="h2 display-3 mb-0"></h1>
+          <p id="lead" class="lead"></p>
           <a href="#" value="http://google.com" id="google">http://lorem-rss.herokuapp.com/feed?unit=second&interval=30</a>
           <form action class="rss-form text-body">
             <div class="row">
@@ -45,7 +45,6 @@
                   <input type="text" class="form-control w-100" id="rssInput" placeholder="Input your RSS-link here"
                     required aria-describedby="rssInputFeedback" autocomplete="off">
                   <label for="rssInput">Input your RSS-link here:</label>
-                  <div id="rssInputFeedback" class="invalid-feedback"></div>
                 </div>
               </div>
               <div class="col-auto">
@@ -53,8 +52,8 @@
               </div>
             </div>
           </form>
-          <p class="mt-2 mb-0 text-muted">Пример: https://ru.hexlet.io/lessons.rss</p>
-          <p class="feedback m-0 position-absolute small text-success">RSS успешно загружен</p>
+          <p id="example" class="mt-2 mb-0 text-muted"></p>
+          <p id="feedback" class="feedback m-0 position-absolute small"></p>
         </div>
       </div>
     </section>

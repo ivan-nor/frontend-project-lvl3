@@ -22,36 +22,62 @@ const createCardElement = (title) => {
   return card;
 };
 
-export const renderModal = ({
-  title, description, link,
-}) => {
-  // console.log('title', title, 'descrip', description, 'link', link);
-  const modalTitle = document.querySelector('.modal-title');
-  modalTitle.textContent = '';
-  const modalBody = document.querySelector('.modal-body');
-  modalBody.innerHTML = '';
-  const modalA = document.querySelector('.modal-footer > a');
-  modalA.setAttribute('href', '#');
+export const renderErrors = (elements, state, t) => {
+  console.log('RENDER FEEDBACK');
+  const { feedback, input, button } = elements;
 
-  const textContainer = document.createElement('div');
-  textContainer.classList.add('container', 'p-1');
+  input.classList.remove('is-valid', 'is-invalid');
+  button.classList.remove('disabled');
+  feedback.classList.remove('text-success');
+  feedback.classList.add('text-danger');
+
+  const messages = [];
+  Object.keys(state.errorMessages).forEach((key) => {
+    messages.push(t(`errorMessages.${key}`));
+    input.classList.add('is-invalid');
+    button.classList.add('disabled');
+  });
+  feedback.innerHTML = messages.join('\n');
+
+  if (messages.length === 0 && state.inputValue.length > 0) {
+    input.classList.add('is-valid');
+  }
+};
+
+export const renderModal = ({ modal }, post) => {
+  const {
+    title: modalTitle,
+    body: modalBody,
+    link: modalLink,
+  } = modal;
+  const { title, description, link } = post;
+  console.log('RENDER MODAL');
+
+  modalTitle.textContent = '';
+  modalBody.innerHTML = '';
+  modalLink.setAttribute('href', '#');
+
+  const modalTextContainer = document.createElement('div');
+  modalTextContainer.classList.add('container', 'p-1');
 
   const descriptionHTML = new DOMParser().parseFromString(description, 'text/html');
   const imgElements = descriptionHTML.querySelectorAll('img');
   imgElements.forEach((img) => {
     img.classList.add('img-fluid');
   });
-  descriptionHTML.body.childNodes.forEach((el) => textContainer.append(el));
-  modalBody.append(textContainer);
+  descriptionHTML.body.childNodes.forEach((el) => modalTextContainer.append(el));
+  modalBody.append(modalTextContainer);
   modalTitle.textContent = title;
-  modalA.setAttribute('href', link);
+  modalLink.setAttribute('href', link);
 };
 
-export const renderContent = (feedsElement, postsElement, feeds, posts) => {
+export const renderContent = (elements, state) => {
   console.log('RENDER CONTENT');
+  const { feeds: feedsElement, posts: postsElement } = elements;
+  const { feeds, posts } = state;
+
   feedsElement.innerHTML = '';
   postsElement.innerHTML = '';
-  // console.log(feedsElement.innerHTML, postsElement.innerHTML, feeds, posts);
 
   const feedsCard = createCardElement('Фиды');
   const feedsUl = feedsCard.querySelector('ul');
@@ -78,9 +104,9 @@ export const renderContent = (feedsElement, postsElement, feeds, posts) => {
 
   _.sortBy(posts, 'pubDateMs').reverse().forEach((post) => {
     const {
-      title, link, postId, visited, pubDate, pubDateMs,
+      title, link, postId, visited,
     } = post;
-    console.log(pubDate, pubDateMs);
+
     const postsLi = document.createElement('li');
 
     const postA = document.createElement('a');
@@ -99,7 +125,7 @@ export const renderContent = (feedsElement, postsElement, feeds, posts) => {
     postButton.setAttribute('data-bs-toggle', 'modal');
     postButton.setAttribute('data-bs-target', '#exampleModal');
     postButton.textContent = 'Просмотр';
-    postButton.addEventListener('click', clickPostHandler(post, renderModal));
+    postButton.addEventListener('click', clickPostHandler(elements, post, renderModal));
 
     postsLi.append(postA, postButton);
     postsLi.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0', 'mr-1');

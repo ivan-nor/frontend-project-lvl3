@@ -6,13 +6,10 @@ export default (url, feeds) => {
     url: yup.string().url().notOneOf(feeds.map((feed) => feed.url)),
   });
 
-  console.log('VALIDATOR, url --> ', url);
-  // const feedLinks = collection.map(({ link }) => link);
   try {
     schema.validateSync({ url }, { abortEarly: false });
-    return {}; // isValidSync() ---> boolean или можно validateSync() ----> возвращает массив ошибок
+    return {};
   } catch (e) {
-    console.log('ERROR', keyBy(e.inner, 'path'));
-    return keyBy(e.inner, 'path');
+    return keyBy(e.inner, 'type');
   }
 };

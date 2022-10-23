@@ -7,6 +7,8 @@ export default {
       link: 'Читать полностью',
       button: 'Закрыть',
     },
+    feedsName: 'Фиды',
+    postsName: 'Посты',
     title: 'RSS агрегатор',
     lead: 'Начните читать RSS сегодня! Это легко, это красиво.',
     submit: 'Добавить',

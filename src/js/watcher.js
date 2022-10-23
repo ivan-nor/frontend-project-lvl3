@@ -1,67 +1,61 @@
+// import axios from 'axios';
 import onChange from 'on-change';
-import { renderContent } from './renders';
+import { renderErrors, renderFeeds, renderPosts } from './renders';
+import { responseFeedsResourses } from './controllers';
 
-export default (container, state, t) => {
-  console.log('RUN SET WATCHER');
-  const form = container.querySelector('form');
-  const input = form.querySelector('input');
-  const postsElement = document.querySelector('#posts');
-  const feedsElement = document.querySelector('#feeds');
-
-  const button = form.querySelector('button');
-  button.innerHTML = t('submit');
-
-  const invalidFeedback = document.querySelector('.invalid-feedback');
-  invalidFeedback.innerHTML = t('invalidFeedback');
-
-  const label = form.querySelector('label');
-  label.innerHTML = t('label');
+export default (elements, state, t) => {
+  const {
+    form,
+    input,
+    button,
+    feedback,
+  } = elements;
+  let {
+    feeds,
+    posts,
+    errorMessages,
+    process,
+    urls,
+  } = state;
 
   input.focus();
-
-  // eslint-disable-next-line func-names
+  console.log('SET WATCHER');
+  // eslint-disable-next-line func-names, prefer-arrow-callback
   return onChange(state, function (...args) {
     const [path] = args;
     console.log('WATCHER change ', path.toUpperCase(), ':>>', state[path]);
-    input.classList.add('is-invalid');
     switch (path) {
       case 'process':
         if (state.process === 'sending') {
           button.classList.add('disabled');
-        } else {
+          feedback.classList.remove('text-danger', 'text-success');
+          feedback.innerHTML = t('sending');
+          feedback.classList.add('text-warning');
+        }
+        if (state.process === 'success') {
           button.classList.remove('disabled');
+          feedback.classList.remove('text-danger', 'text-warning');
+          feedback.innerHTML = t('success');
+          feedback.classList.add('text-success');
         }
         form.reset();
         break;
-      case 'feeds':
+      case 'urls':
+        clearTimeout(this.timerId);
+        setTimeout(responseFeedsResourses(this, state, urls), 0);
         break;
       case 'errorMessages':
-        break;
-      case 'inputValue':
-        break;
-      case 'isValid':
-        if (this.isValid) {
-          button.classList.remove('disabled');
-          input.classList.add('is-valid');
-          input.classList.remove('is-invalid');
-        } else {
-          button.classList.add('disabled');
-          input.classList.add('is-invalid');
-          input.classList.remove('is-valid');
-        }
-        if (this.inputValue === '') {
-          button.classList.add('disabled');
-          input.classList.remove('is-invalid');
-          input.classList.remove('is-valid');
-        }
-        input.focus();
+        renderErrors(elements, state, t);
         break;
       case 'posts':
-        renderContent(feedsElement, postsElement, state.feeds, state.posts);
-
-        input.classList.remove('is-invalid');
-        input.classList.remove('is-valid');
-        form.reset();
+        renderPosts(elements, state, t);
+        break;
+      case 'feeds':
+        renderFeeds(elements, state, t);
+        break;
+      case 'inputValue':
+      case 'timerId':
+      case 'proxy':
         break;
       default:
         throw new Error(`Unknown watchedState path: ${path}`);

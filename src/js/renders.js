@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { clickPostHandler } from './controllers';
 
 const createCardElement = (title) => {
@@ -45,13 +44,13 @@ export const renderErrors = (elements, state, t) => {
 };
 
 export const renderModal = ({ modal }, post) => {
+  console.log('RENDER MODAL');
   const {
     title: modalTitle,
     body: modalBody,
     link: modalLink,
   } = modal;
   const { title, description, link } = post;
-  console.log('RENDER MODAL');
 
   modalTitle.textContent = '';
   modalBody.innerHTML = '';
@@ -71,23 +70,18 @@ export const renderModal = ({ modal }, post) => {
   modalLink.setAttribute('href', link);
 };
 
-export const renderContent = (elements, state) => {
-  console.log('RENDER CONTENT');
-  const { feeds: feedsElement, posts: postsElement } = elements;
-  const { feeds, posts } = state;
-
+export const renderFeeds = (elements, state, t) => {
+  console.log('RENDER FEEDS');
+  const { feeds: feedsElement } = elements;
+  const { feeds } = state;
   feedsElement.innerHTML = '';
-  postsElement.innerHTML = '';
-
-  const feedsCard = createCardElement('Фиды');
+  const feedsName = t('feedsName');
+  const feedsCard = createCardElement(feedsName);
   const feedsUl = feedsCard.querySelector('ul');
   feedsCard.append(feedsUl);
 
-  const postsCard = createCardElement('Посты');
-  const postUl = postsCard.querySelector('ul');
-  postsCard.append(postUl);
-
-  feeds.forEach(({ channelTitle, channelDescription }) => {
+  feeds.reverse().forEach(({ channelTitle, channelDescription }) => {
+    // console.log('channel :>> ', channelTitle, channelDescription);
     const titleElement = document.createElement('h3');
     titleElement.classList.add('h6', 'm-0');
     titleElement.innerHTML = channelTitle;
@@ -102,36 +96,62 @@ export const renderContent = (elements, state) => {
     feedsUl.append(feedsLi);
   });
 
-  _.sortBy(posts, 'pubDateMs').reverse().forEach((post) => {
-    const {
-      title, link, postId, visited,
-    } = post;
-
-    const postsLi = document.createElement('li');
-
-    const postA = document.createElement('a');
-    postA.setAttribute('href', link);
-    postA.setAttribute('target', '_blank');
-    postA.setAttribute('rel', 'noopener noreferrer');
-    postA.setAttribute('data-id', postId);
-    postA.className = visited ? 'fw-normal link-secondary' : 'fw-bold';
-    postA.textContent = title;
-    postA.addEventListener('click', clickPostHandler(post));
-
-    const postButton = document.createElement('button');
-    postButton.classList.add('btn', 'btn-outline-primary', 'btn-sm');
-    postButton.setAttribute('data-id', postId);
-    postButton.setAttribute('type', 'button');
-    postButton.setAttribute('data-bs-toggle', 'modal');
-    postButton.setAttribute('data-bs-target', '#exampleModal');
-    postButton.textContent = 'Просмотр';
-    postButton.addEventListener('click', clickPostHandler(elements, post, renderModal));
-
-    postsLi.append(postA, postButton);
-    postsLi.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0', 'mr-1');
-    postUl.append(postsLi);
-  });
-
   if (feeds.length) { feedsElement.append(feedsCard); }
+};
+
+export const renderPosts = (elements, state, t) => {
+  // console.log('RENDER CONTENT', state.feeds, state.posts);
+  console.log('RENDER CONTENT');
+  const { posts } = state;
+  const {
+    posts: postsElement,
+    input,
+    form,
+  } = elements;
+  postsElement.innerHTML = '';
+
+  const postsName = t('postsName');
+  const postsCard = createCardElement(postsName);
+  const postUl = postsCard.querySelector('ul');
+  postsCard.append(postUl);
+
+  posts
+    .sort((a, b) => {
+      if (a.pubDateMs > b.pubDateMs) { return 1; }
+      return -1;
+    })
+    .reverse()
+    .forEach((post) => {
+      const {
+        title, link, postId, visited,
+      } = post;
+      const postsLi = document.createElement('li');
+
+      const postA = document.createElement('a');
+      postA.setAttribute('href', link);
+      postA.setAttribute('target', '_blank');
+      postA.setAttribute('rel', 'noopener noreferrer');
+      postA.setAttribute('data-id', postId);
+      postA.className = visited ? 'fw-normal link-secondary' : 'fw-bold';
+      postA.textContent = title;
+      postA.addEventListener('click', clickPostHandler(post));
+
+      const postButton = document.createElement('button');
+      postButton.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+      postButton.setAttribute('data-id', postId);
+      postButton.setAttribute('type', 'button');
+      postButton.setAttribute('data-bs-toggle', 'modal');
+      postButton.setAttribute('data-bs-target', '#exampleModal');
+      postButton.textContent = 'Просмотр';
+      postButton.addEventListener('click', clickPostHandler(elements, post, renderModal));
+
+      postsLi.append(postA, postButton);
+      postsLi.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0', 'mr-1');
+      postUl.append(postsLi);
+    });
   if (posts.length) { postsElement.append(postsCard); }
+
+  input.classList.remove('is-invalid');
+  input.classList.remove('is-valid');
+  form.reset();
 };

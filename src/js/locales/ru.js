@@ -16,10 +16,10 @@ export default {
     example: 'Пример: https://ru.hexlet.io/lessons.rss',
     success: 'RSS успешно загружен',
     errorMessages: {
-      networkError: 'Ресурс недоступен',
-      formatError: 'нет RSS по данной ссылке',
-      url: 'URL должен быть валидным url',
-      notOneOf: 'URL уже есть в списке',
+      networkError: 'Ошибка сети',
+      formatError: 'Ресурс не содержит валидный RSS',
+      url: 'Ссылка должна быть валидным URL,',
+      notOneOf: 'RSS уже существует',
     },
   },
 };

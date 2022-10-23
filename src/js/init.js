@@ -1,13 +1,12 @@
 // @ts-check
 import i18n from 'i18next';
 import 'regenerator-runtime/runtime';
-import resources from '../locales/index.js';
+import resources from './locales/index.js';
 import { inputHandler, submitHandler } from './controllers';
 import setWatcher from './watcher';
 
 export default (container, initialState = {}) => {
-  const { lng = 'ru' } = initialState;
-  // console.log('container :>> ', container);
+  const { lng = 'ru', proxy } = initialState;
 
   i18n.createInstance({ lng, resources }, (err, t) => {
     if (err) return console.log('something went wrong loading', err);
@@ -19,6 +18,9 @@ export default (container, initialState = {}) => {
       errorMessages: {},
       feeds: [],
       posts: [],
+      urls: [],
+      proxy,
+      timerId: null,
     };
 
     const elements = {
@@ -40,8 +42,6 @@ export default (container, initialState = {}) => {
       },
     };
 
-    // console.log('elements :>> ', elements);
-
     const a = container.querySelector('#google'); // затычка для быстрого ввода ссылок
     a.addEventListener('click', (event) => {
       event.preventDefault();
@@ -49,19 +49,18 @@ export default (container, initialState = {}) => {
       elements.input.value = event.target.textContent;
     });
 
-    const watchedState = setWatcher(elements, state, t);
+    const watchedState = setWatcher(elements, state, t, proxy);
 
     elements.title.innerHTML = t('title');
     elements.lead.innerHTML = t('lead');
     elements.button.innerHTML = t('submit');
     elements.label.innerHTML = t('label');
     elements.example.innerHTML = t('example');
-    elements.form.addEventListener('submit', submitHandler(watchedState));
+    elements.form.addEventListener('submit', submitHandler(watchedState, proxy));
     elements.input.addEventListener('input', inputHandler(watchedState));
     elements.input.focus();
     elements.modal.link.innerHTML = t('modal.link');
     elements.modal.button.innerHTML = t('modal.button');
-
 
     return null; // требования линтера
   });

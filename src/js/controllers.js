@@ -1,67 +1,119 @@
-import { isEmpty } from 'lodash';
 import axios from 'axios';
 import validate from './validator';
 import parse from './parser';
 
-const proxy = 'https://allorigins.hexlet.app/get?url=';
-
-// let counter = 0; // реализация счетчика кликов
-// const count = () => {
-//   counter += 1;
-//   return counter;
-// };
-
-const clickPostHandler = (post, renderModalFunction) => (event) => {
+const clickPostHandler = (elements, post, renderModalFunction) => (event) => {
+  console.log('CLICK POST');
   if (event.target.tagName === 'BUTTON') {
     event.preventDefault();
-    renderModalFunction(post);
+    renderModalFunction(elements, post);
   }
-  post.visited = true;
+  Object.defineProperty(post, 'visited', { value: true });
   const a = event.target.parentNode.firstElementChild;
   a.className = 'fw-normal link-secondary';
 };
 
 const inputHandler = (watchedState) => (event) => {
   event.preventDefault();
+  console.log('INPUT HANDLER');
   watchedState.inputValue = event.target.value;
-  const newErrorMessages = validate(watchedState.inputValue, watchedState.feeds);
-  watchedState.isValid = isEmpty(newErrorMessages) || watchedState.inputValue === '';
-  watchedState.errorMessages = newErrorMessages;
+  const newErrorMessages = validate(watchedState.inputValue, watchedState.urls);
+  watchedState.errorMessages = (watchedState.inputValue === '') ? {} : { ...newErrorMessages };
+  // console.log('inputValue :>> ', watchedState.inputValue);
 };
 
-const submitHandler = (watchedState) => (event) => {
-  // const { feeds: feeds1, posts: posts1 } = watchedState;
+const submitHandler = (watchedState, proxy) => (event) => {
   event.preventDefault();
-  watchedState.process = 'sending';
-  console.log('click SUBMIT');
-  const requestURL = `${proxy}${encodeURIComponent(watchedState.inputValue)}`;
+  const form = event.target;
 
+  console.log('SUBMIT HANDLER');
+  let {
+    inputValue,
+    process,
+    urls,
+    errorMessages,
+  } = watchedState;
+  watchedState.process = 'sending';
+  const requestURL = `${proxy}${encodeURIComponent(inputValue)}`;
   axios.get(requestURL)
     .then((response) => {
-      // console.log(response);
-      watchedState.process = 'success';
-      const contentType = response.data.status.content_type;
-      const contentUrl = response.data.status.url;
-      if (contentType.includes('xml')) {
-        const parsed = parse(response.data.contents);
-        const { channelTitle, channelDescription, posts } = parsed;
-        watchedState.feeds.push({ url: contentUrl, channelTitle, channelDescription });
-        watchedState.posts.push(...posts);
+      // console.log('response :>> ', response);
+      if (response.data.status.content_type.indexOf('xml') > 0 && response.data.contents.length > 0) {
+        watchedState.process = 'success';
+        urls.push(inputValue);
+        form.reset();
       } else {
-        watchedState.errorMessages = ['not rss!'];
+        // console.log('NOT RSSSSS');
+        watchedState.errorMessages = { formatError: null };
       }
-      return response.data.contents;
     })
-    .catch((error) => { throw new Error(error); });
-  // .then((data) => {
-  // });
-  // .then(() => {
+    .catch(() => {
+      watchedState.process = 'input';
+      watchedState.errorMessages = { networkError: null };
+    });
+};
 
-  // }); // добавить отрисовку ошибки в ivalid-feedback
+let count = 0;
+const responseFeedsResourses = (watchedState, state, feedLinks) => () => {
+  let {
+    errorMessages,
+    process,
+    proxy,
+    feeds,
+    posts,
+    timerId,
+  } = watchedState;
+
+  console.log('COUNT of responses :>> ', ++count);
+  // console.log('RFR feedsList :>> ', feedLinks);
+  // console.table(state.posts.map(p => p.pubDateMs));
+
+  const feedsPromises = feedLinks.map((feed) => {
+    const requestURL = `${proxy}${encodeURIComponent(feed)}`;
+    return axios.get(requestURL)
+      .then((response) => {
+        // console.log('RESPONSE DATA', response.data);
+        const contentType = response.data.status.content_type;
+        if (contentType.includes('xml')) {
+          return parse(response.data.contents);
+        }
+        watchedState.process = 'input';
+        watchedState.errorMessages = { formatError: null };
+        return null;
+      })
+      .catch(() => {
+        watchedState.errorMessages = { networkError: null };
+      });
+  });
+  Promise.all(feedsPromises).then((parsed) => {
+    // console.log('PARSED', parsed);
+    watchedState.process = 'success';
+    parsed.forEach(({ channelPosts, channelTitle, channelDescription }) => {
+      // console.log('parsed :>> ', channelPosts.map((post) => post.title));
+      // console.log('state.feeds :>> ', state.feeds);
+      // console.log('not includes(state.feeds, channelTitle) :>> ', !includes(state.feeds, channelTitle));
+      const newPosts = [];
+      channelPosts.forEach((post) => {
+        if (!(state.posts.map((p) => p.pubDateMs).includes(post.pubDateMs))) {
+          newPosts.push(post);
+        }
+      });
+      // console.log('newPosts :>> ', newPosts);
+      if (newPosts.length > 0) {
+        posts.push(...newPosts);
+      }
+      if (!(state.feeds.map((f) => f.channelTitle).includes(channelTitle))) {
+        feeds.push({ channelTitle, channelDescription });
+      }
+    });
+  });
+  clearTimeout(state.timerId);
+  state.timerId = setTimeout(responseFeedsResourses(watchedState, state, feedLinks), 5000);
 };
 
 export {
   inputHandler,
   submitHandler,
   clickPostHandler,
+  responseFeedsResourses,
 };

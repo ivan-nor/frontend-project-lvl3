@@ -15,10 +15,11 @@ export default {
     label: 'Введите RSS-ссылку',
     example: 'Пример: https://ru.hexlet.io/lessons.rss',
     success: 'RSS успешно загружен',
+    sending: 'Просмотр',
     errorMessages: {
       networkError: 'Ошибка сети',
       formatError: 'Ресурс не содержит валидный RSS',
-      url: 'Ссылка должна быть валидным URL,',
+      url: 'Ссылка должна быть валидным URL',
       notOneOf: 'RSS уже существует',
     },
   },

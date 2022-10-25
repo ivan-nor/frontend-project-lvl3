@@ -2,4 +2,4 @@
 [![hexlet-check](https://github.com/ivan-nor/frontend-project-lvl3/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/ivan-nor/frontend-project-lvl3/actions/workflows/hexlet-check.yml)
 
 **EXAMPLE**
-![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app={https://frontend-project-lvl3-lilac-beta.vercel.app/})
+![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app={frontend-project-lvl3-lilac-beta})

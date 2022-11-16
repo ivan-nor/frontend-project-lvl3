@@ -17,7 +17,7 @@
   "homepage": "https://github.com/ivan-nor/frontend-project-lvl3#readme",
   "jest": {
     "verbose": true,
-    "testURL": "http://localhost/",
+    "testURL": "http://localhost:8080/",
     "testEnvironment": "jsdom"
   },
   "main": "src/init.js",
@@ -51,6 +51,7 @@
     "webpack-dev-server": "^4.1.1"
   },
   "dependencies": {
+    "@playwright/test": "^1.27.1",
     "@popperjs/core": "^2.11.6",
     "axios": "^1.1.2",
     "bootstrap": "^5.2.2",

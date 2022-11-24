@@ -37,6 +37,7 @@ export default (elements, state, t) => {
           feedback.classList.remove('text-danger', 'text-warning');
           feedback.innerHTML = t('success');
           feedback.classList.add('text-success');
+          form.reset();
         }
         form.reset();
         break;

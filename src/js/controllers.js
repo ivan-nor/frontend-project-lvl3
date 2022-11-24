@@ -34,14 +34,13 @@ const submitHandler = (watchedState, proxy) => (event) => {
     errorMessages,
   } = watchedState;
   watchedState.process = 'sending';
-  const requestURL = `${proxy}${encodeURIComponent(inputValue)}`;
+  const requestURL = `${proxy}${(inputValue)}`;
   axios.get(requestURL)
     .then((response) => {
       // console.log('response :>> ', response);
       if (response.data.status.content_type.indexOf('xml') > 0 && response.data.contents.length > 0) {
         watchedState.process = 'success';
         urls.push(inputValue);
-        form.reset();
       } else {
         // console.log('NOT RSSSSS');
         watchedState.errorMessages = { formatError: null };
@@ -69,7 +68,7 @@ const responseFeedsResourses = (watchedState, state, feedLinks) => () => {
   // console.table(state.posts.map(p => p.pubDateMs));
 
   const feedsPromises = feedLinks.map((feed) => {
-    const requestURL = `${proxy}${encodeURIComponent(feed)}`;
+    const requestURL = `${proxy}${feed}`;
     return axios.get(requestURL)
       .then((response) => {
         // console.log('RESPONSE DATA', response.data);
@@ -86,7 +85,7 @@ const responseFeedsResourses = (watchedState, state, feedLinks) => () => {
       });
   });
   Promise.all(feedsPromises).then((parsed) => {
-    // console.log('PARSED', parsed);
+    console.log('PARSED', parsed);
     watchedState.process = 'success';
     parsed.forEach(({ channelPosts, channelTitle, channelDescription }) => {
       // console.log('parsed :>> ', channelPosts.map((post) => post.title));

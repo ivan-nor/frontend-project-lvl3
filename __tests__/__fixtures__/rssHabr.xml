@@ -1,0 +1,127 @@
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+	<channel>
+		<title>
+			Все публикации подряд
+		</title>
+		<link>
+			https://habr.com/ru/all/
+		</link>
+		<description>
+			<![CDATA[ Все публикации подряд на Хабре ]]>
+		</description>
+		<language>
+			ru
+		</language>
+		<managingEditor>
+			editor@habr.com
+		</managingEditor>
+		<generator>
+			habr.com
+		</generator>
+		<pubDate>
+			Wed, 16 Nov 2022 13:30:53 GMT
+		</pubDate>
+		<image>
+			<link>
+				https://habr.com/ru/
+			</link>
+			<url>
+				https://habrastorage.org/webt/ym/el/wk/ymelwk3zy1gawz4nkejl_-ammtc.png
+			</url>
+			<title>
+				Хабр
+			</title>
+		</image>
+		<item>
+			<title>
+				<![CDATA[ [Перевод] Как работать с curl в Windows ]]>
+			</title>
+			<guid isPermaLink="true">
+				https://habr.com/ru/post/699226/
+			</guid>
+			<link>
+				https://habr.com/ru/post/699226/?utm_source=habrahabr&utm_medium=rss&utm_campaign=699226
+			</link>
+			<description>
+				<![CDATA[ <a href="https://habr.com/ru/company/ruvds/blog/699226/"><div style="text-align:center;"><img src="https://habrastorage.org/webt/_j/xu/jq/_jxujqrw2hv2hfai8et1a0oe0u8.png"></div></a><br> Curl (client URL) — это инструмент командной строки на основе библиотеки libcurl для передачи данных с сервера и на сервер при помощи различных протоколов, в том числе HTTP, HTTPS, FTP, FTPS, IMAP, IMAPS, POP3, POP3S, SMTP и SMTPS. Он очень популярен в сфере автоматизации и скриптов благодаря широкому диапазону функций и поддерживаемых протоколов. В этой статье мы расскажем, как использовать curl в Windows на различных примерах.<br> <a href="https://habr.com/ru/post/699226/?utm_source=habrahabr&amp;utm_medium=rss&amp;utm_campaign=699226#habracut">Читать дальше &rarr;</a> ]]>
+			</description>
+			<pubDate>
+				Wed, 16 Nov 2022 13:00:02 GMT
+			</pubDate>
+			<creator>
+				ru_vds
+			</creator>
+			<category>
+				<![CDATA[ Блог компании RUVDS.com ]]>
+			</category>
+			<category>
+				<![CDATA[ Сетевые технологии ]]>
+			</category>
+			<category>
+				<![CDATA[ Хранение данных ]]>
+			</category>
+			<category>
+				curl
+			</category>
+			<category>
+				скриптинг
+			</category>
+			<category>
+				сетевые протоколы
+			</category>
+			<category>
+				скачивание файлов
+			</category>
+			<category>
+				libcurl
+			</category>
+			<category>
+				ruvds_перевод
+			</category>
+		</item>
+		<item>
+			<title>
+				<![CDATA[ Регистрация аккаунта разработчика в Apple: что может пойти не так ]]>
+			</title>
+			<guid isPermaLink="true">
+				https://habr.com/ru/post/699722/
+			</guid>
+			<link>
+				https://habr.com/ru/post/699722/?utm_source=habrahabr&utm_medium=rss&utm_campaign=699722
+			</link>
+			<description>
+				<![CDATA[ <p>Чтобы приложение появилось в App Store, нужно заполнить не одну форму, запастись документацией и терпением. В интернете есть гайды, которые подробно рассказывают, как опубликовать продукт. Но не всегда все идет по плану. Мы рассказали историю одной регистрации в Apple Developer Program, которая вместо двух недель затянулась на 3 месяца. О таких нюансах обычно не пишут в официальных инструкциях, но с ними может столкнуться каждый. </p> <a href="https://habr.com/ru/post/699722/?utm_source=habrahabr&amp;utm_medium=rss&amp;utm_campaign=699722#habracut">Читать далее</a> ]]>
+			</description>
+			<pubDate>
+				Wed, 16 Nov 2022 12:40:40 GMT
+			</pubDate>
+			<creator>
+				YusmpGroup
+			</creator>
+			<category>
+				<![CDATA[ Разработка мобильных приложений ]]>
+			</category>
+			<category>
+				<![CDATA[ app store ]]>
+			</category>
+			<category>
+				<![CDATA[ публикация приложений ]]>
+			</category>
+			<category>
+				<![CDATA[ регистрация ]]>
+			</category>
+			<category>
+				<![CDATA[ apple ]]>
+			</category>
+			<category>
+				<![CDATA[ apple store ]]>
+			</category>
+			<category>
+				<![CDATA[ apple developer program ]]>
+			</category>
+			<category>
+				<![CDATA[ duns ]]>
+			</category>
+		</item>
+	</channel>
+</rss>

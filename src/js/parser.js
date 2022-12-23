@@ -1,3 +1,5 @@
+import { uniqueId } from "lodash";
+
 const isJsonString = (str) => {
   try {
     JSON.parse(str);
@@ -33,6 +35,7 @@ export default (str) => {
       link,
       pubDate,
       pubDateMs: Date.parse(pubDate),
+      postId: uniqueId(),
     });
   });
   return channel;

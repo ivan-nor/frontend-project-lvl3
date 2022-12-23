@@ -21,6 +21,8 @@ export default (container, initialState = {}) => {
       urls: [],
       proxy,
       timerId: null,
+      // TODO UI State сделать соответственно элементам, чтобы применять диспетчеризацию (??)
+      modal: null,
     };
 
     const elements = {
@@ -42,21 +44,20 @@ export default (container, initialState = {}) => {
       },
     };
 
-    const a = container.querySelector('#google'); // затычка для быстрого ввода ссылок
-    a.addEventListener('click', (event) => {
+    const tempLinks = container.querySelectorAll('.tempLink'); // затычка для быстрого ввода ссылок
+    tempLinks.forEach((link) => link.addEventListener('click', (event) => {
       event.preventDefault();
       state.inputValue = event.target.textContent;
       elements.input.value = event.target.textContent;
-    });
-
-    const watchedState = setWatcher(elements, state, t, proxy);
+    }));
+    const watchedState = setWatcher(elements, state, t);
 
     elements.title.innerHTML = t('title');
     elements.lead.innerHTML = t('lead');
     elements.button.innerHTML = t('submit');
     elements.label.innerHTML = t('label');
     elements.example.innerHTML = t('example');
-    elements.form.addEventListener('submit', submitHandler(watchedState, proxy));
+    elements.form.addEventListener('submit', submitHandler(watchedState, state, proxy));
     elements.input.addEventListener('input', inputHandler(watchedState));
     elements.input.focus();
     elements.modal.link.innerHTML = t('modal.link');

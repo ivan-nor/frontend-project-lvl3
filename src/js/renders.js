@@ -22,7 +22,7 @@ const createCardElement = (title) => {
 };
 
 export const renderErrors = (elements, state, t) => {
-  console.log('RENDER FEEDBACK');
+  // console.log('RENDER FEEDBACK');
   const { feedback, input, button } = elements;
 
   input.classList.remove('is-valid', 'is-invalid');
@@ -43,14 +43,16 @@ export const renderErrors = (elements, state, t) => {
   }
 };
 
-export const renderModal = ({ modal }, post) => {
-  console.log('RENDER MODAL');
+export const renderModal = ({ modal }, state) => {
+  console.log('RENDER MODAL', modal, state.modal);
   const {
     title: modalTitle,
     body: modalBody,
     link: modalLink,
   } = modal;
-  const { title, description, link } = post;
+
+  const { title, description, link } = state.modal;
+  console.log(title, description, link);
 
   modalTitle.textContent = '';
   modalBody.innerHTML = '';
@@ -71,7 +73,7 @@ export const renderModal = ({ modal }, post) => {
 };
 
 export const renderFeeds = (elements, state, t) => {
-  console.log('RENDER FEEDS');
+  // console.log('RENDER FEEDS', state.feeds);
   const { feeds: feedsElement } = elements;
   const { feeds } = state;
   feedsElement.innerHTML = '';
@@ -99,9 +101,8 @@ export const renderFeeds = (elements, state, t) => {
   if (feeds.length) { feedsElement.append(feedsCard); }
 };
 
-export const renderPosts = (elements, state, t) => {
-  // console.log('RENDER CONTENT', state.feeds, state.posts);
-  console.log('RENDER CONTENT');
+export const renderPosts = (elements, state, t, watchedState) => {
+  // console.log('RENDER POSTS', state.posts);
   const { posts } = state;
   const {
     posts: postsElement,
@@ -134,7 +135,7 @@ export const renderPosts = (elements, state, t) => {
       postA.setAttribute('data-id', postId);
       postA.className = visited ? 'fw-normal link-secondary' : 'fw-bold';
       postA.textContent = title;
-      postA.addEventListener('click', clickPostHandler(post));
+      postA.addEventListener('click', clickPostHandler(watchedState, state, postId));
 
       const postButton = document.createElement('button');
       postButton.classList.add('btn', 'btn-outline-primary', 'btn-sm');
@@ -142,8 +143,8 @@ export const renderPosts = (elements, state, t) => {
       postButton.setAttribute('type', 'button');
       postButton.setAttribute('data-bs-toggle', 'modal');
       postButton.setAttribute('data-bs-target', '#exampleModal');
-      postButton.textContent = 'Просмотр';
-      postButton.addEventListener('click', clickPostHandler(elements, post, renderModal));
+      postButton.textContent = t('sending');
+      postButton.addEventListener('click', clickPostHandler(watchedState, state, postId));
 
       postsLi.append(postA, postButton);
       postsLi.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0', 'mr-1');

@@ -1,6 +1,6 @@
 // import axios from 'axios';
 import onChange from 'on-change';
-import { renderErrors, renderFeeds, renderPosts } from './renders';
+import { renderErrors, renderFeeds, renderModal, renderPosts } from './renders';
 import { responseFeedsResourses } from './controllers';
 
 export default (elements, state, t) => {
@@ -19,7 +19,7 @@ export default (elements, state, t) => {
   } = state;
 
   input.focus();
-  console.log('SET WATCHER');
+  // console.log('SET WATCHER');
   // eslint-disable-next-line func-names, prefer-arrow-callback
   return onChange(state, function (...args) {
     const [path] = args;
@@ -29,7 +29,7 @@ export default (elements, state, t) => {
         if (state.process === 'sending') {
           button.classList.add('disabled');
           feedback.classList.remove('text-danger', 'text-success');
-          feedback.innerHTML = t('sending');
+          // feedback.innerHTML = t('sending');
           feedback.classList.add('text-warning');
         }
         if (state.process === 'success') {
@@ -41,18 +41,26 @@ export default (elements, state, t) => {
         }
         form.reset();
         break;
-      case 'urls':
-        clearTimeout(this.timerId);
-        setTimeout(responseFeedsResourses(this, state, urls), 0);
-        break;
       case 'errorMessages':
         renderErrors(elements, state, t);
         break;
       case 'posts':
-        renderPosts(elements, state, t);
+        renderPosts(elements, state, t, this);
         break;
       case 'feeds':
         renderFeeds(elements, state, t);
+        break;
+      case 'urls':
+        // console.log('WATC URLS before');
+        clearTimeout(this.timerId);
+        setTimeout(responseFeedsResourses(this, state, urls), 0);
+        // console.log('WATC URLS after');
+        break;
+      case 'modal':
+        renderModal(elements, state);
+        break;
+      case 'modal.visited':
+        
         break;
       case 'inputValue':
       case 'timerId':

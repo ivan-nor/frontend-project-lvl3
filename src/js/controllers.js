@@ -4,14 +4,15 @@ import validate from './validator';
 import parse from './parser';
 
 const clickPostHandler = (watchedState, state, postId) => (event) => { // добавить в стейт просмотренный пост и отслеживание изменений
-  console.log('CLICK POST', postId);
+  console.log('CLICK POST id ', postId);
+  // const targetPost = state.posts.filter((postItem) => postItem.postId === postId)[0]; // старый фильтр когда state.posts массив
+  const targetPost = state.posts[postId]
   if (event.target.tagName === 'BUTTON') {
-    watchedState.modal = state.posts.filter((postItem) => postItem.postId === postId)[0];
-    event.preventDefault();
-    console.log(state.modal);
+    watchedState.modal = targetPost;
+    watchedState.modal.visited = true;
   }
-  // const post = watchedState.posts.filter((postItem) => postItem.postId === postId);
-  Object.defineProperty(watchedState.modal, 'visited', { value: true });
+  watchedState.posts[postId].visited = true;
+  // Object.defineProperty(watchedState.modal, 'visited', { value: true });
 };
 
 const inputHandler = (watchedState) => (event) => {
@@ -65,16 +66,14 @@ const responseFeedsResourses = (watchedState, state, feedLinks) => () => {
       // console.log('parsed :>> ', channelPosts.map((post) => post.title));
       // console.log('state.feeds :>> ', state.feeds);
       // console.log('not includes(state.feeds, channelTitle) :>> ', !includes(state.feeds, channelTitle));
-      const newPosts = [];
+      const newPosts = state.posts;
       channelPosts.forEach((post) => {
-        if (!(state.posts.map((p) => p.pubDateMs).includes(post.pubDateMs))) {
-          newPosts.push(post);
+        if (!Object.entries(state.posts).map(([postId, p]) => p.pubDateMs).includes(post.pubDateMs)) {
+          newPosts[post.postId] = post;
         }
       });
-      // console.log('newPosts :>> ', newPosts);
-      if (newPosts.length > 0) {
-        posts.push(...newPosts);
-        // state.uiState = newPosts.map(({ id, visited }) => )
+      if (Object.keys(newPosts).length > 0) {
+        watchedState.posts = {...newPosts}
       }
       if (!(state.feeds.map((f) => f.channelTitle).includes(channelTitle))) {
         feeds.push({ channelTitle, channelDescription });
@@ -87,7 +86,6 @@ const responseFeedsResourses = (watchedState, state, feedLinks) => () => {
 
 const submitHandler = (watchedState, state, proxy) => (event) => {
   event.preventDefault();
-  const form = event.target;
 
   // console.log('SUBMIT HANDLER');
   let {

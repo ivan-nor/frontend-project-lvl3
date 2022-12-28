@@ -17,7 +17,7 @@ export default (container, initialState = {}) => {
       inputValue: '',
       errorMessages: {},
       feeds: [],
-      posts: [],
+      posts: {},
       urls: [],
       proxy,
       timerId: null,

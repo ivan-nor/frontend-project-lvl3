@@ -34,7 +34,7 @@ export const renderErrors = (elements, state, t) => {
   Object.keys(state.errorMessages).forEach((key) => {
     messages.push(t(`errorMessages.${key}`));
     input.classList.add('is-invalid');
-    button.classList.add('disabled');
+    // button.classList.add('disabled');
   });
   feedback.innerHTML = messages.join('\n');
 
@@ -44,7 +44,7 @@ export const renderErrors = (elements, state, t) => {
 };
 
 export const renderModal = ({ modal }, state) => {
-  console.log('RENDER MODAL', modal, state.modal);
+  console.log('RENDER MODAL');
   const {
     title: modalTitle,
     body: modalBody,
@@ -52,7 +52,7 @@ export const renderModal = ({ modal }, state) => {
   } = modal;
 
   const { title, description, link } = state.modal;
-  console.log(title, description, link);
+  // console.log(title, description, link);
 
   modalTitle.textContent = '';
   modalBody.innerHTML = '';
@@ -102,7 +102,7 @@ export const renderFeeds = (elements, state, t) => {
 };
 
 export const renderPosts = (elements, state, t, watchedState) => {
-  // console.log('RENDER POSTS', state.posts);
+  console.log('RENDER POSTS');
   const { posts } = state;
   const {
     posts: postsElement,
@@ -116,7 +116,8 @@ export const renderPosts = (elements, state, t, watchedState) => {
   const postUl = postsCard.querySelector('ul');
   postsCard.append(postUl);
 
-  posts
+  // console.log('Object.values(posts) :>> ', Object.values(posts));
+  Object.values(posts)
     .sort((a, b) => {
       if (a.pubDateMs > b.pubDateMs) { return 1; }
       return -1;
@@ -150,9 +151,9 @@ export const renderPosts = (elements, state, t, watchedState) => {
       postsLi.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0', 'mr-1');
       postUl.append(postsLi);
     });
-  if (posts.length) { postsElement.append(postsCard); }
+  if (Object.values(posts)) { postsElement.append(postsCard); }
 
   input.classList.remove('is-invalid');
   input.classList.remove('is-valid');
-  form.reset();
+  // form.reset();
 };

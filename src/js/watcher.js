@@ -27,7 +27,7 @@ export default (elements, state, t) => {
     switch (path) {
       case 'process':
         if (state.process === 'sending') {
-          button.classList.add('disabled');
+          // button.classList.add('disabled');
           feedback.classList.remove('text-danger', 'text-success');
           // feedback.innerHTML = t('sending');
           feedback.classList.add('text-warning');
@@ -39,7 +39,7 @@ export default (elements, state, t) => {
           feedback.classList.add('text-success');
           form.reset();
         }
-        form.reset();
+        // form.reset();
         break;
       case 'errorMessages':
         renderErrors(elements, state, t);
@@ -60,14 +60,20 @@ export default (elements, state, t) => {
         renderModal(elements, state);
         break;
       case 'modal.visited':
-        
+        renderPosts(elements, state, t, this);
         break;
+      case (/posts\.\d\.visited/).test(path):
+        renderPosts(elements, state, t, this);
       case 'inputValue':
       case 'timerId':
       case 'proxy':
         break;
       default:
-        throw new Error(`Unknown watchedState path: ${path}`);
+        if (/posts\.\d\.visited/) {
+          renderPosts(elements, state, t, this);
+        } else {
+          throw new Error(`Unknown watchedState path: ${path}`);
+        }
     }
   });
 };

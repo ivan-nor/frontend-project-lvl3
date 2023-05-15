@@ -1,4 +1,4 @@
-import { uniqueId } from 'lodash';
+import { uniqueId } from "lodash";
 
 const isJsonString = (str) => {
   try {
@@ -17,7 +17,6 @@ export default (str) => {
   const channelTitle = doc.querySelector('channel > title');
   const channelDescription = doc.querySelector('channel > description');
   console.log('DOC', doc);
-
   const channel = {
     channelTitle: channelTitle.textContent,
     channelDescription: channelDescription.textContent,
@@ -28,11 +27,15 @@ export default (str) => {
     const title = item.querySelector('title').textContent;
     const description = item.querySelector('description').textContent;
     const link = item.querySelector('link').textContent;
+    const pubDate = item.querySelector('pubDate').textContent;
 
     channel.channelPosts.push({
       title,
       description,
       link,
+      pubDate,
+      pubDateMs: Date.parse(pubDate),
+      postId: uniqueId(),
     });
   });
   return channel;

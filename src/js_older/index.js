@@ -1,6 +1,10 @@
-import init from './init.js';
+// @ts-check
 
-import './style.scss';
+import 'bootstrap';
+
+import init from './init';
+
+import '../styles/style.scss';
 
 const point = document.querySelector('#point');
 

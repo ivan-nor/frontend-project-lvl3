@@ -14,15 +14,13 @@ export default {
     submit: 'Добавить',
     label: 'Введите RSS-ссылку',
     example: 'Пример: https://ru.hexlet.io/lessons.rss',
-    messages: {
-      success: 'RSS успешно загружен',
-      sending: 'Просмотр',
-      error: {
-        networkError: 'Ошибка сети',
-        formatError: 'Ресурс не содержит валидный RSS',
-        url: 'Ссылка должна быть валидным URL',
-        notOneOf: 'RSS уже существует',
-      },
+    success: 'RSS успешно загружен',
+    sending: 'Просмотр',
+    errorMessages: {
+      networkError: 'Ошибка сети',
+      formatError: 'Ресурс не содержит валидный RSS',
+      url: 'Ссылка должна быть валидным URL',
+      notOneOf: 'RSS уже существует',
     },
   },
 };

@@ -1,12 +1,12 @@
 // @ts-check
 import i18n from 'i18next';
+import 'regenerator-runtime/runtime';
 import resources from './locales/index.js';
-import { inputHandler, submitHandler } from './controllers.js';
-import setWatcher from './watcher.js';
-import { renderFeeds, renderPosts } from './renders.js';
+import { inputHandler, submitHandler } from './controllers';
+import setWatcher from './watcher';
 
 export default (container, initialState = {}) => {
-  const { lng = 'ru', proxy = '' } = initialState;
+  const { lng = 'ru', proxy } = initialState;
 
   i18n.createInstance({ lng, resources }, (err, t) => {
     if (err) return console.log('something went wrong loading', err);
@@ -14,14 +14,13 @@ export default (container, initialState = {}) => {
 
     const state = {
       process: 'input', // input, sending, success
-      // form: {
-      //   status: 'submitted', // submitted, error, sending
-      // },
       inputValue: '',
-      message: {},
+      errorMessages: {},
       feeds: [],
-      posts: [],
+      posts: {},
+      urls: [],
       proxy,
+      timerId: null,
       // TODO UI State сделать соответственно элементам, чтобы применять диспетчеризацию (??)
       modal: null,
     };
@@ -48,7 +47,6 @@ export default (container, initialState = {}) => {
     const tempLinks = container.querySelectorAll('.tempLink'); // затычка для быстрого ввода ссылок
     tempLinks.forEach((link) => link.addEventListener('click', (event) => {
       event.preventDefault();
-      console.log('CLICKKKK');
       state.inputValue = event.target.textContent;
       elements.input.value = event.target.textContent;
     }));

@@ -1,7 +1,5 @@
-// import axios from 'axios';
 import onChange from 'on-change';
-import { renderErrors, renderFeeds, renderModal, renderPosts } from './renders';
-import { responseFeedsResourses } from './controllers';
+import { renderFeeds } from './renders.js';
 
 export default (elements, state, t) => {
   const {
@@ -18,12 +16,17 @@ export default (elements, state, t) => {
     urls,
   } = state;
 
-  input.focus();
-  // console.log('SET WATCHER');
-  // eslint-disable-next-line func-names, prefer-arrow-callback
-  return onChange(state, function (...args) {
-    const [path] = args;
-    console.log('WATCHER change ', path.toUpperCase(), ':>>', state[path]);
+  console.log('SET WATCHER');
+  let index = 0;
+  // eslint-disable-next-line func-names
+  return onChange(state, function (path, value, previousValue, applyData) {
+    console.log('Object changed:', ++index);
+    console.log('this:', this);
+    console.log('path:', path);
+    console.log('value:', value);
+    console.log('previousValue:', previousValue);
+    console.log('applyData:', applyData);
+
     switch (path) {
       case 'process':
         if (state.process === 'sending') {
@@ -35,45 +38,26 @@ export default (elements, state, t) => {
         if (state.process === 'success') {
           button.classList.remove('disabled');
           feedback.classList.remove('text-danger', 'text-warning');
-          feedback.innerHTML = t('success');
+          feedback.innerHTML = t('messages.success');
           feedback.classList.add('text-success');
           form.reset();
+          input.focus();
         }
-        // form.reset();
+        input.focus();
         break;
-      case 'errorMessages':
-        renderErrors(elements, state, t);
+      case 'form.status':
+        break;
+      case 'inputValue':
         break;
       case 'posts':
-        renderPosts(elements, state, t, this);
         break;
       case 'feeds':
-        renderFeeds(elements, state, t);
+        renderFeeds(this, elements.feeds);
         break;
-      case 'urls':
-        // console.log('WATC URLS before');
-        clearTimeout(this.timerId);
-        setTimeout(responseFeedsResourses(this, state, urls), 0);
-        // console.log('WATC URLS after');
-        break;
-      case 'modal':
-        renderModal(elements, state);
-        break;
-      case 'modal.visited':
-        renderPosts(elements, state, t, this);
-        break;
-      case (/posts\.\d\.visited/).test(path):
-        renderPosts(elements, state, t, this);
-      case 'inputValue':
-      case 'timerId':
-      case 'proxy':
+      case 'message':
         break;
       default:
-        if (/posts\.\d\.visited/) {
-          renderPosts(elements, state, t, this);
-        } else {
-          throw new Error(`Unknown watchedState path: ${path}`);
-        }
+        break;
     }
   });
 };

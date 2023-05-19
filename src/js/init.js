@@ -3,7 +3,6 @@ import i18n from 'i18next';
 import resources from './locales/index.js';
 import { inputHandler, submitHandler } from './controllers.js';
 import setWatcher from './watcher.js';
-import { renderFeeds, renderPosts } from './renders.js';
 
 export default (container, initialState = {}) => {
   const { lng = 'ru', proxy = '' } = initialState;
@@ -19,11 +18,11 @@ export default (container, initialState = {}) => {
       // },
       inputValue: '',
       message: {},
-      feeds: [],
-      posts: [],
+      channels: [], // { title, description, posts: [{ title, description, link }] } etc.
       proxy,
       // TODO UI State сделать соответственно элементам, чтобы применять диспетчеризацию (??)
       modal: null,
+      timerId: null,
     };
 
     const elements = {
@@ -52,6 +51,7 @@ export default (container, initialState = {}) => {
       state.inputValue = event.target.textContent;
       elements.input.value = event.target.textContent;
     }));
+
     const watchedState = setWatcher(elements, state, t);
 
     elements.title.innerHTML = t('title');
@@ -59,7 +59,7 @@ export default (container, initialState = {}) => {
     elements.button.innerHTML = t('submit');
     elements.label.innerHTML = t('label');
     elements.example.innerHTML = t('example');
-    elements.form.addEventListener('submit', submitHandler(watchedState, state, proxy));
+    elements.form.addEventListener('submit', submitHandler(watchedState));
     elements.input.addEventListener('input', inputHandler(watchedState));
     elements.input.focus();
     elements.modal.link.innerHTML = t('modal.link');

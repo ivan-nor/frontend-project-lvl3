@@ -3,46 +3,69 @@
 import axios from 'axios';
 import { isEmpty } from 'lodash';
 import validate from './validator.js';
-import parser from './parser.js';
+import parse from './parser.js';
+
+let counterRFR = 1;
+const responseFeedsResourses = (watchedState) => {
+  const {
+    errorMessages,
+    process,
+    proxy,
+    channels,
+    timerId,
+  } = watchedState;
+
+  // перебрать все каналы, загрузиь посты по каждой ссылке и сравнить с соотв постами в соотв канале
+
+  clearTimeout(timerId);
+  console.log('RFR ', counterRFR, 'time(s)');
+
+  counterRFR += 1;
+  watchedState.timerId = setTimeout(responseFeedsResourses, 5000, watchedState);
+};
+
+let counterSubmit = 1;
+const submitHandler = (watchedState) => (event) => {
+  const { proxy, inputValue, channels } = watchedState;
+  event.preventDefault();
+  console.log('SUBMIT HANDLER ', counterSubmit);
+
+  const requestURL = `${proxy}${inputValue}`;
+
+  axios.get(requestURL)
+    .then((response) => {
+      const parsed = parse(response.data.contents);
+
+      if (response.data.status.content_type.includes('xml')) {
+        console.log('SUCCESS RSS');
+        watchedState.channels.push(parsed);
+        responseFeedsResourses(watchedState);
+      } else {
+        console.log('NOT RSSSSS');
+        watchedState.errorMessages = { formatError: null };
+      }
+    })
+    .catch((e) => {
+      console.log('CATCH controLlEr NETW ERR', e, requestURL);
+      watchedState.process = 'input';
+      watchedState.errorMessages = { networkError: null };
+    });
+  watchedState.process = 'success';
+  counterSubmit += 1;
+};
 
 const inputHandler = (watchedState) => (event) => {
   event.preventDefault();
-  console.log('event.target.value :>> ', event.target.value);
+  console.log('INPUT HANDLER ', event.target.value);
 
   watchedState.inputValue = event.target.value;
   const validateMessage = validate(watchedState.inputValue, watchedState.feeds);
+
   if (event.target.value === '' || isEmpty(validateMessage)) {
     watchedState.process = 'input';
     watchedState.message = {};
   }
   console.log('validateMessage :>> ', validateMessage);
-};
-
-const submitHandler = (watchedState, state, proxy) => (event) => {
-  event.preventDefault();
-  console.log('SUBMIT HANDLER', watchedState.inputValue);
-
-  const requestURL = `${proxy}${(watchedState.inputValue)}`;
-
-  axios.get(requestURL)
-    .then((response) => {
-      console.log('response :>> ', response);
-      if (response.data.status.content_type.indexOf('xml') > 0 && response.data.contents.length > 0) {
-        // watchedState.process = 'success';
-        watchedState.feeds.push(watchedState.inputValue);
-        console.log('THEN success resp url');
-        // responseFeedsResourses();
-      } else {
-        // console.log('NOT RSSSSS');
-        watchedState.errorMessages = { formatError: null };
-      }
-    })
-    .catch(() => {
-      // console.log('CATCH controLEr NETW ERR');
-      watchedState.process = 'input';
-      watchedState.errorMessages = { networkError: null };
-    });
-  watchedState.process = 'success';
 };
 
 export { inputHandler, submitHandler };

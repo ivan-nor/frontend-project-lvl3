@@ -15,13 +15,43 @@ const responseFeedsResourses = (watchedState) => {
     timerId,
   } = watchedState;
 
-  // перебрать все каналы, загрузиь посты по каждой ссылке и сравнить с соотв постами в соотв канале
+  const urls = channels.map(({ channelLink }) => {
+    console.log('CHANNEL LINK', channelLink);
+    return axios.get(`${proxy}${channelLink}`)
+      .then((response) => {
+        console.log('RESP MAP GET ', response);
+        return parse(response.data.contents);
+      })
+      .catch((e) => console.log('e :>> ', e));
+  });
+
+  Promise.all(urls)
+    .then(console.log)
+    .catch(console.log);
+
+  // console.log('URLS', urls);
+  // // перебрать все каналы, загрузиь посты по каждой ссылке и сравнить с соотв постами в соотв канале
+  // channels.forEach(({ // перебор каналов
+  //   channelTitle,
+  //   channelDescription,
+  //   channelPosts,
+  //   channelLink,
+  // }) => {
+  //   console.log(channelTitle, channelDescription, channelPosts, channelLink);
+
+  //   channelPosts.forEach(({ title, description, link }) => { // перебор постов в канале
+  //     // console.log(title, description, link);
+
+  //     // запрос по ссылке канала на новые посты
+
+  //   });
+  // });
 
   clearTimeout(timerId);
   console.log('RFR ', counterRFR, 'time(s)');
 
   counterRFR += 1;
-  watchedState.timerId = setTimeout(responseFeedsResourses, 5000, watchedState);
+  // watchedState.timerId = setTimeout(responseFeedsResourses, 5000, watchedState);
 };
 
 let counterSubmit = 1;
@@ -59,7 +89,7 @@ const inputHandler = (watchedState) => (event) => {
   console.log('INPUT HANDLER ', event.target.value);
 
   watchedState.inputValue = event.target.value;
-  const validateMessage = validate(watchedState.inputValue, watchedState.feeds);
+  const validateMessage = validate(watchedState.inputValue, watchedState.channels.map(({ channelLink }) => channelLink));
 
   if (event.target.value === '' || isEmpty(validateMessage)) {
     watchedState.process = 'input';

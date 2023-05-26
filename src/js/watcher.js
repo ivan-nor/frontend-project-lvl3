@@ -23,6 +23,9 @@ export default (elements, state, t) => {
         if (state.process === 'success') {
           form.reset();
           input.focus();
+        } else {
+          form.reset();
+          input.focus();
         }
         input.focus();
         break;
@@ -39,6 +42,9 @@ export default (elements, state, t) => {
       case 'timerId':
         break;
       case 'channels':
+        break;
+      case 'urls':
+
         break;
       default:
         break;

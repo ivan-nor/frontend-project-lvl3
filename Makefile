@@ -10,7 +10,7 @@ build:
 	NODE_ENV=production npx webpack
 
 test:
-	npm test
+	npx playwright test
 
 lint:
 	npx eslint .

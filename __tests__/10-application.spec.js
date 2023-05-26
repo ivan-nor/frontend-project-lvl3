@@ -66,6 +66,7 @@ test('adding', async ({ page }) => {
   // const responseHandler = getResponseHandler(page);
   await responseHandler(rssUrl, rss1);
 
+  console.log(page, rssUrl, rss1);
   await page.locator('input[aria-label="url"]').type(rssUrl);
   await page.locator('button[type="submit"]').click();
 

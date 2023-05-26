@@ -1,7 +1,7 @@
 // @ts-check
 import i18n from 'i18next';
 import resources from './locales/index.js';
-import { inputHandler, submitHandler } from './controllers.js';
+import { inputHandler, submitHandler, responseFeedsResourses } from './controllers.js';
 import setWatcher from './watcher.js';
 
 export default (container, initialState = {}) => {
@@ -18,6 +18,7 @@ export default (container, initialState = {}) => {
       // },
       inputValue: '',
       message: {},
+      urls: [],
       channels: [], // { title, description, posts: [{ title, description, link }] } etc.
       proxy,
       // TODO UI State сделать соответственно элементам, чтобы применять диспетчеризацию (??)
@@ -64,6 +65,8 @@ export default (container, initialState = {}) => {
     elements.input.focus();
     elements.modal.link.innerHTML = t('modal.link');
     elements.modal.button.innerHTML = t('modal.button');
+
+    responseFeedsResourses(watchedState);
 
     return null; // требования линтера
   });

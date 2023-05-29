@@ -1,4 +1,5 @@
 import onChange from 'on-change';
+import { renderFeeds, renderPosts } from './renders';
 
 export default (elements, state, t) => {
   const {
@@ -6,6 +7,8 @@ export default (elements, state, t) => {
     input,
     button,
     feedback,
+    feeds,
+    posts,
   } = elements;
 
   console.log('SET WATCHER');
@@ -34,8 +37,10 @@ export default (elements, state, t) => {
       case 'inputValue':
         break;
       case 'posts':
+        renderPosts(state, posts);
         break;
       case 'feeds':
+        renderFeeds(state, feeds);
         break;
       case 'message':
         break;

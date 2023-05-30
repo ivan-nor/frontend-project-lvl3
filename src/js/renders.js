@@ -1,10 +1,14 @@
 /* eslint-disable no-param-reassign */
 
-const renderFeeds = (state, feedsElement) => {
+const hr = document.createElement('hr');
+
+const renderFeeds = (state, feedsElement, t) => {
+  console.log('state, state.feeds :>> ', state.feeds);
   console.log('click render feeds', feedsElement);
   feedsElement.innerHTML = '';
   const ul = document.createElement('ul');
   state.feeds.forEach((feed) => {
+    console.log('feed :>> ', feed);
     const li = document.createElement('li');
     li.textContent = feed;
     ul.append(li);
@@ -12,7 +16,7 @@ const renderFeeds = (state, feedsElement) => {
   feedsElement.append(ul);
 };
 
-const renderErrorMessage = (elements, state, t) => {
+const renderMessage = (state, elements, t) => {
   console.log('RENDER FEEDBACK');
   const { feedback, input, button } = elements;
 
@@ -22,10 +26,10 @@ const renderErrorMessage = (elements, state, t) => {
   feedback.classList.add('text-danger');
 
   const messages = [];
-  Object.keys(state.errorMessages).forEach((key) => {
+  Object.keys(state.message).forEach((key) => {
     messages.push(t(`errorMessages.${key}`));
     input.classList.add('is-invalid');
-    // button.classList.add('disabled');
+    button.classList.add('disabled');
   });
   feedback.innerHTML = messages.join('\n');
 
@@ -34,18 +38,21 @@ const renderErrorMessage = (elements, state, t) => {
   }
 };
 
-const renderPosts = (state, elements) => {
+const renderPosts = (state, postsElement, t) => {
+  console.log('state.posts :>> ', state.posts);
+
   if (state.posts.lenght === 0) {
-    elements.posts.innerHTML = '';
+    postsElement.innerHTML = '';
   } else {
     const ul = document.createElement('ul');
-    state.posts.forEach((post) => {
+    state.posts.forEach(({ title, description, link }) => {
+      // console.log('object :>> ', title, description, link);
       const li = document.createElement('li');
-      li.textContent = post;
+      li.textContent = `${title} \n ${description} \n ${link}`;
       ul.append(li);
     });
-    elements.posts.append(ul);
+    postsElement.append(ul);
   }
 };
 
-export { renderFeeds, renderErrorMessage, renderPosts };
+export { renderFeeds, renderMessage, renderPosts };

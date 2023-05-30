@@ -20,6 +20,8 @@ export default (container, initialState = {}) => {
       message: {},
       urls: [],
       channels: [], // { title, description, posts: [{ title, description, link }] } etc.
+      feeds: [],
+      posts: [],
       proxy,
       // TODO UI State сделать соответственно элементам, чтобы применять диспетчеризацию (??)
       modal: null,

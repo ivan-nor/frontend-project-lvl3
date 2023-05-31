@@ -12,10 +12,7 @@ export default (container, initialState = {}) => {
     console.log('INIT');
 
     const state = {
-      process: 'input', // input, sending, success
-      // form: {
-      //   status: 'submitted', // submitted, error, sending
-      // },
+      process: 'input', // input, sending, success, error ИЛИ input и error ьудет одно состояние ???
       inputValue: '',
       message: {},
       urls: [],

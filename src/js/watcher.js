@@ -26,9 +26,6 @@ export default (elements, state, t) => {
         if (state.process === 'success') {
           form.reset();
           input.focus();
-        } else {
-          form.reset();
-          input.focus();
         }
         input.focus();
         break;

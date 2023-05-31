@@ -79,7 +79,8 @@ const submitHandler = (watchedState) => (event) => {
       // watchedState.process = 'input';
       watchedState.message = { networkError: null };
     });
-  // watchedState.process = 'success';
+  watchedState.process = 'success';
+  watchedState.message = { success: null };
   counterSubmit += 1;
 };
 
@@ -90,11 +91,8 @@ const inputHandler = (watchedState) => (event) => {
   watchedState.inputValue = event.target.value;
   const validateMessage = validate(watchedState.inputValue, watchedState.urls);
 
-  if (event.target.value === '' || isEmpty(validateMessage)) {
-    // watchedState.process = 'input';
-    watchedState.message = {};
-  }
-  // console.log('validateMessage :>> ', validateMessage);
+  watchedState.message = validateMessage;
+  watchedState.process = 'input';
 };
 
 export { inputHandler, submitHandler, responseFeedsResourses };

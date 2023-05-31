@@ -16,8 +16,12 @@ const renderFeeds = (state, feedsElement, t) => {
   feedsElement.append(ul);
 };
 
-const renderMessage = (state, elements, t) => {
-  console.log('RENDER FEEDBACK');
+const renderMessage = (state, elements, t) => { // изменить отрисову сообщений
+  // подумать как сделать либо только по ключу отрисовывать разные увета либо
+  // по состоянию лейбла, danger, warning, success, empty
+  // тогда состояния формы, сообдщения ИЛИ только ПРОЦЕСС input success error sending !!!!!
+
+  console.log('RENDER FEEDBACK', 'State process', state.process);
   const { feedback, input, button } = elements;
 
   input.classList.remove('is-valid', 'is-invalid');

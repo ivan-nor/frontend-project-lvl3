@@ -27,14 +27,15 @@ const responseFeedsResourses = (watchedState) => {
   // console.log('state :>> ', state);
 
   const proxiedUrls = urls.map((url) => `${proxy}${url}`);
-
-  const requests = proxiedUrls.map((url) => axios.get(url));
+  const requests = proxiedUrls.map((url) => axios.get(url, { withCredentials: false })); // для отключ CORS ???
 
   Promise.all(requests)
     .then((responses) => {
       responses.forEach((response) => {
-        // console.log('RESPONSe ', response);
-        const parsed = parse(response.data.contents);
+        console.log('RESPONSe ', response);
+
+        const responseData = (proxy) ? response.data.contents : response.data; // при разработке без сети и прокси
+        const parsed = parse(responseData);
 
         if (!includes(state.feeds, parsed.channelTitle)) {
           watchedState.feeds.push(parsed.channelTitle);
@@ -60,7 +61,7 @@ const submitHandler = (watchedState) => (event) => {
 
   const requestURL = `${watchedState.proxy}${watchedState.inputValue}`;
 
-  axios.get(requestURL)
+  axios.get(requestURL, { withCredentials: false }) // без сети для разработки
     .then((response) => {
       // добавить проверку на уникальность URL
       if (response.data.status.content_type.includes('rss') && !watchedState.urls.includes(watchedState.inputValue)) {
@@ -75,6 +76,12 @@ const submitHandler = (watchedState) => (event) => {
     })
     .catch((e) => {
       console.log('CATCH controLlEr NETW ERR', e, requestURL);
+
+      // для разработки без сети
+      watchedState.proxy = '';
+      watchedState.urls.push('http://localhost:5000/feed?unit=second&interval=30');
+      // watchedState.urls.push('http://localhost:5000/');
+      responseFeedsResourses(watchedState);
 
       // watchedState.process = 'input';
       watchedState.message = { networkError: null };

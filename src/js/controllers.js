@@ -11,6 +11,13 @@ import parse from './parser.js';
 
 let counterRFR = 0;
 
+/*
+Реализуйте валидацию в форме добавления RSS-потока.
+После отправки данных формы, приложение должно производить валидацию и подсвечивать красным рамку вокруг инпута, если адрес невалидный.
+Помимо корректности ссылки, нужно валидировать дубли. Если урл уже есть в списке фидов, то он не проходит валидацию.
+После того как поток добавлен, форма принимает первоначальный вид (очищается инпут, устанавливается фокус).
+*/
+
 const responseFeedsResourses = (watchedState) => {
   const {
     proxy,
@@ -19,17 +26,16 @@ const responseFeedsResourses = (watchedState) => {
   } = watchedState;
 
   counterRFR += 1;
-  console.log('RFR', counterRFR, 'time(s)', ' URLS ->', urls);
+  console.log('RFR', counterRFR, 'time(s)');
   const state = onChange.target(watchedState);
-  // console.log('state :>> ', state);
 
   const proxiedUrls = urls.map((url) => `${proxy}${url}`);
-  const requests = proxiedUrls.map((url) => axios.get(url, { withCredentials: false })); // для отключ CORS ???
+  const requests = proxiedUrls.map((url) => axios.get(url)); // для отключ CORS ??? { withCredentials: false }
 
   Promise.all(requests)
     .then((responses) => {
       responses.forEach((response) => {
-        console.log('RESPONSe ', response);
+        console.log('RESPONSE ', response);
 
         const responseData = (proxy) ? response.data.contents : response.data; // при разработке без сети и прокси
         const parsed = parse(responseData);
@@ -47,7 +53,7 @@ const responseFeedsResourses = (watchedState) => {
     .catch(console.log);
 
   clearTimeout(timerId);
-  watchedState.timerId = setTimeout(responseFeedsResourses, 1000, watchedState); // рекурсивный таймер
+  watchedState.timerId = setTimeout(responseFeedsResourses, 5000, watchedState); // рекурсивный таймер
 };
 
 let counterSubmit = 1;
@@ -57,17 +63,17 @@ const submitHandler = (watchedState) => (event) => {
   console.log('SUBMIT HANDLER ', counterSubmit);
 
   const requestURL = `${watchedState.proxy}${watchedState.inputValue}`;
-  watchedState.process = 'success';
-  watchedState.message = 'success';
+  // watchedState.message = 'success';
+  // watchedState.process = 'success';
 
-  axios.get(requestURL, { withCredentials: false }) // без сети для разработки
+  axios.get(requestURL) // без сети для разработки, { withCredentials: false }
     .then((response) => {
       // добавить проверку на уникальность URL
       if (response.data.status.content_type.includes('rss') && !watchedState.urls.includes(watchedState.inputValue)) {
         console.log('SUCCESS RSS');
         watchedState.urls.push(watchedState.inputValue);
-        watchedState.process = 'success';
         watchedState.message = 'success';
+        watchedState.process = 'success';
         responseFeedsResourses(watchedState);
       } else {
         console.log('NOT RSSSSS');
@@ -88,21 +94,21 @@ const submitHandler = (watchedState) => (event) => {
       watchedState.process = 'error';
       watchedState.message = 'networkError';
     });
-  watchedState.process = 'success';
-  watchedState.message = 'success';
+  // watchedState.process = 'success';
+  // watchedState.message = 'success';
   counterSubmit += 1;
 };
 
 const inputHandler = (watchedState) => (event) => {
   event.preventDefault();
-  // console.log('event.type :>> ', event.type);
+  console.log('INPUT HANDLER :>> ', event.target.value);
   watchedState.inputValue = event.target.value;
   const validateMessage = validate(watchedState.inputValue, watchedState.urls);
 
-  const keyMessage = Object.keys(validateMessage)[0];
+  const keyMessage = Object.keys(validateMessage)[0] || '';
   watchedState.message = keyMessage;
-
   watchedState.process = (keyMessage) ? 'error' : 'input';
+
   // console.log('! ! ! => ', watchedState.message, watchedState.process);
 };
 

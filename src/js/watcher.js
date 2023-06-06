@@ -1,12 +1,11 @@
 import onChange from 'on-change';
-import { renderFeeds, renderPosts, renderMessage } from './renders';
+// import { isEmpty } from 'lodash';
+import {
+  renderFeeds, renderPosts, renderMessage, renderForm,
+} from './renders';
 
 export default (elements, state, t) => {
   const {
-    form,
-    input,
-    button,
-    feedback,
     feeds,
     posts,
   } = elements;
@@ -20,16 +19,7 @@ export default (elements, state, t) => {
 
     switch (path) {
       case 'process':
-        if (state.process === 'sending') {
-          break;
-        }
-        if (state.process === 'success') {
-          form.reset();
-          input.focus();
-        }
-        input.focus();
-        break;
-      case 'form.status':
+        renderForm(state, elements, t);
         break;
       case 'inputValue':
         break;
@@ -44,14 +34,12 @@ export default (elements, state, t) => {
         break;
       case 'timerId':
         break;
-      case 'channels':
-        break;
       case 'urls':
-
         break;
       default:
         break;
     }
   }
+
   return onChange(state, watch, { ignoreKeys: ['timerId'] });
 };

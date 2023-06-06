@@ -12,15 +12,13 @@ export default (container, initialState = {}) => {
     console.log('INIT');
 
     const state = {
-      process: 'input', // input, sending, success, error ИЛИ input и error ьудет одно состояние ???
-      inputValue: '',
-      message: {},
+      process: 'input', // input, sending, success, error
+      inputValue: null,
+      message: null, // ключ ошибки или успеха
       urls: [],
-      channels: [], // { title, description, posts: [{ title, description, link }] } etc.
-      feeds: [],
-      posts: [],
+      feeds: [], // { channelTitle }
+      posts: [], // { title, description, link, id }
       proxy,
-      // TODO UI State сделать соответственно элементам, чтобы применять диспетчеризацию (??)
       modal: null,
       timerId: null,
     };

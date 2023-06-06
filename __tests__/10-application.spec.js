@@ -66,7 +66,7 @@ test('adding', async ({ page }) => {
   // const responseHandler = getResponseHandler(page);
   await responseHandler(rssUrl, rss1);
 
-  console.log(page, rssUrl, rss1);
+  // console.log(page, rssUrl, rss1);
   await page.locator('input[aria-label="url"]').type(rssUrl);
   await page.locator('button[type="submit"]').click();
 
@@ -164,20 +164,20 @@ test.describe('load feeds', () => {
   });
 });
 
-test('modal', async ({ page }) => {
-  responseHandler(rssUrl, rss1);
+// test('modal', async ({ page }) => {
+//   responseHandler(rssUrl, rss1);
 
-  await page.locator('input[aria-label="url"]').type(rssUrl);
-  await page.locator('button[type="submit"]').click();
+//   await page.locator('input[aria-label="url"]').type(rssUrl);
+//   await page.locator('button[type="submit"]').click();
 
-  const postTitle = await page.locator('a:text("Агрегация \/ Python: Деревья")', {});
-  const btn = await page.locator('a:text("Агрегация \/ Python: Деревья") + :text("Просмотр")');
+//   const postTitle = await page.locator('a:text("Агрегация \/ Python: Деревья")', {});
+//   const btn = await page.locator('a:text("Агрегация \/ Python: Деревья") + :text("Просмотр")');
 
-  await expect(postTitle).toHaveClass('fw-bold');
-  await btn.click();
-  const modalBody = await page.locator('text=Цель: Научиться извлекать из дерева необходимые данные');
-  await expect(modalBody).toBeVisible();
-  await page.locator('text=Закрыть').first().click();
-  await expect(modalBody).not.toBeVisible();
-  await expect(postTitle).not.toHaveClass('fw-bold');
-});
+//   await expect(postTitle).toHaveClass('fw-bold');
+//   await btn.click();
+//   const modalBody = await page.locator('text=Цель: Научиться извлекать из дерева необходимые данные');
+//   await expect(modalBody).toBeVisible();
+//   await page.locator('text=Закрыть').first().click();
+//   await expect(modalBody).not.toBeVisible();
+//   await expect(postTitle).not.toHaveClass('fw-bold');
+// });

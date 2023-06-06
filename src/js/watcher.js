@@ -15,7 +15,9 @@ export default (elements, state, t) => {
 
   function watch(path, value, previousValue) {
     counter += 1;
-    console.log('WATCHER CALLED', counter, 'time(s) PATH :>>', path, 'PREV ->', previousValue, 'VALUE ->', value);
+    if (path !== 'inputValue') {
+      console.log('WATCHER CALLED', counter, 'PATH =', path, '\n   PREV  ->', previousValue, '\n   VALUE ->', value);
+    }
 
     switch (path) {
       case 'process':

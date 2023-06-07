@@ -2,9 +2,7 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-unused-vars */
 import axios from 'axios';
-import {
-  uniqBy, includes, uniqueId,
-} from 'lodash';
+import { uniqBy, uniqueId } from 'lodash';
 import onChange from 'on-change';
 import validate from './validator.js';
 import parse from './parser.js';
@@ -58,44 +56,37 @@ const responseFeedsResourses = (watchedState) => {
 
 let counterSubmit = 1;
 const submitHandler = (watchedState) => (event) => {
-  // const { proxy, inputValue, urls } = watchedState;
   event.preventDefault();
   console.log('SUBMIT HANDLER ', counterSubmit);
 
-  const requestURL = `${watchedState.proxy}${watchedState.inputValue}`;
-  // watchedState.message = 'success';
-  // watchedState.process = 'success';
+  const validateMessage = validate(watchedState.inputValue, watchedState.urls); // валидация после отправки формы
+  const keyMessage = Object.keys(validateMessage)[0] || '';
+  watchedState.message = keyMessage;
+  watchedState.process = (keyMessage) ? 'error' : 'input';
 
-  axios.get(requestURL) // без сети для разработки, { withCredentials: false }
-    .then((response) => {
-      // добавить проверку на уникальность URL
-      if (response.data.status.content_type.includes('rss') && !watchedState.urls.includes(watchedState.inputValue)) {
-        console.log('SUCCESS RSS');
-        watchedState.urls.push(watchedState.inputValue);
-        watchedState.message = 'success';
-        watchedState.process = 'success';
-        responseFeedsResourses(watchedState);
-      } else {
-        console.log('NOT RSSSSS');
+  if (!watchedState.message) {
+    const requestURL = `${watchedState.proxy}${watchedState.inputValue}`;
+
+    axios.get(requestURL) // без сети для разработки, { withCredentials: false }
+      .then((response) => {
+        if (response.data.status.content_type.includes('rss') && !watchedState.urls.includes(watchedState.inputValue)) {
+          console.log('SUCCESS RSS');
+          watchedState.urls.push(watchedState.inputValue);
+          watchedState.message = 'success';
+          watchedState.process = 'success';
+          responseFeedsResourses(watchedState);
+        } else {
+          console.log('NOT RSSSSS');
+          watchedState.process = 'error';
+          watchedState.message = 'formatError';
+        }
+      })
+      .catch((e) => {
+        console.log('CATCH NETWORK ERROR', e, requestURL);
         watchedState.process = 'error';
-        watchedState.message = 'formatError';
-      }
-    })
-    .catch((e) => {
-      console.log('CATCH controLlEr NETW ERR', e, requestURL);
-      // watchedState.urls.push(watchedState.inputValue);
-      // responseFeedsResourses(watchedState);
-      // для разработки без сети
-      // watchedState.proxy = '';
-      // watchedState.urls.push('http://localhost:5000/feed?unit=second&interval=30');
-      // // watchedState.urls.push('http://localhost:5000/');
-      // responseFeedsResourses(watchedState);
-
-      watchedState.process = 'error';
-      watchedState.message = 'networkError';
-    });
-  // watchedState.process = 'success';
-  // watchedState.message = 'success';
+        watchedState.message = 'networkError';
+      });
+  }
   counterSubmit += 1;
 };
 
@@ -103,13 +94,6 @@ const inputHandler = (watchedState) => (event) => {
   event.preventDefault();
   console.log('INPUT HANDLER :>> ', event.target.value);
   watchedState.inputValue = event.target.value;
-  const validateMessage = validate(watchedState.inputValue, watchedState.urls);
-
-  const keyMessage = Object.keys(validateMessage)[0] || '';
-  watchedState.message = keyMessage;
-  watchedState.process = (keyMessage) ? 'error' : 'input';
-
-  // console.log('! ! ! => ', watchedState.message, watchedState.process);
 };
 
 export { inputHandler, submitHandler, responseFeedsResourses };

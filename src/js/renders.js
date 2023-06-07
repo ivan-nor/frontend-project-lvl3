@@ -59,7 +59,7 @@ const renderForm = (state, elements, t) => {
     },
     error: () => {
       console.log('CALLED PROCESS RENNDERING ERROR =>', state.process);
-      button.classList.add('disabled');
+      // button.classList.add('disabled');
       feedback.classList.add('text-danger');
       input.classList.add('is-invalid');
       input.focus();

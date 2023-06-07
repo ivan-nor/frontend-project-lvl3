@@ -12,9 +12,9 @@ export default (container, initialState = {}) => {
     console.log('INIT');
 
     const state = {
-      process: 'input', // input, sending, success, error
-      inputValue: null,
-      message: null, // ключ ошибки или успеха
+      process: '', // input, sending, success, error
+      inputValue: '',
+      message: '', // ключ ошибки или успеха
       urls: [],
       feeds: [], // { channelTitle }
       posts: [], // { title, description, link, id }

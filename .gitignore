@@ -2,3 +2,6 @@
 *.log
 dist
 assets
+/srs/js_older
+tinkoff.js
+/srs/js/Example.js

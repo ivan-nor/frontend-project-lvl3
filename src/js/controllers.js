@@ -22,8 +22,6 @@ const requestFeedsResourses = (watchedState) => {
   Promise.all(requests)
     .then((responses) => {
       responses.forEach((response) => {
-        console.log('RESPONSE ', response);
-
         const responseData = (proxy) ? response.data.contents : response.data;
         const parsed = parse(responseData);
 

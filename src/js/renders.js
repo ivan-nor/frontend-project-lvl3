@@ -46,7 +46,7 @@ const renderMessage = ({ message }, elements, t) => {
   feedback.innerHTML = (message) ? t(`messages.${message}`) : '';
 };
 
-const renderForm = (state, elements, t) => {
+const renderForm = (state, elements) => {
   const {
     form, feedback, input, button,
   } = elements;

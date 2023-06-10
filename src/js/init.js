@@ -1,7 +1,7 @@
 // @ts-check
 import i18n from 'i18next';
 import resources from './locales/index.js';
-import { inputHandler, submitHandler, responseFeedsResourses } from './controllers.js';
+import { inputHandler, submitHandler, requestFeedsResourses } from './controllers.js';
 import setWatcher from './watcher.js';
 
 export default (container, initialState = {}) => {
@@ -9,12 +9,11 @@ export default (container, initialState = {}) => {
 
   i18n.createInstance({ lng, resources }, (err, t) => {
     if (err) return console.log('something went wrong loading', err);
-    console.log('INIT');
 
     const state = {
       process: '', // input, sending, success, error
       inputValue: '',
-      message: '', // ключ ошибки или успеха
+      message: '',
       urls: [],
       feeds: [], // { channelTitle }
       posts: [], // { title, description, link, id }
@@ -28,8 +27,8 @@ export default (container, initialState = {}) => {
       input: container.querySelector('#rssInput'),
       button: container.querySelector('button[type="submit"]'),
       label: container.querySelector('label'),
-      feedback: container.querySelector('.feedback'),
-      example: container.querySelector('p.text-muted'),
+      feedback: container.querySelector('#feedback'),
+      example: container.querySelector('#example'),
       feeds: container.querySelector('#feeds'),
       posts: container.querySelector('#posts'),
       title: container.querySelector('#title'),
@@ -42,13 +41,12 @@ export default (container, initialState = {}) => {
       },
     };
 
-    const tempLinks = container.querySelectorAll('.tempLink'); // затычка для быстрого ввода ссылок
-    tempLinks.forEach((link) => link.addEventListener('click', (event) => {
-      event.preventDefault();
-      console.log('CLICKKKK');
-      state.inputValue = event.target.textContent;
-      elements.input.value = event.target.textContent;
-    }));
+    // const tempLinks = container.querySelectorAll('.tempLink'); // затычка для ввода ссылок
+    // tempLinks.forEach((link) => link.addEventListener('click', (event) => {
+    //   event.preventDefault();
+    //   state.inputValue = event.target.textContent;
+    //   elements.input.value = event.target.textContent;
+    // }));
 
     const watchedState = setWatcher(elements, state, t);
 
@@ -63,8 +61,8 @@ export default (container, initialState = {}) => {
     elements.modal.link.innerHTML = t('modal.link');
     elements.modal.button.innerHTML = t('modal.button');
 
-    responseFeedsResourses(watchedState);
+    requestFeedsResourses(watchedState);
 
-    return null; // требования линтера
+    return null;
   });
 };

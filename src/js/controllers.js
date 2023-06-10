@@ -34,7 +34,6 @@ const requestFeedsResourses = (watchedState) => {
         const uniquePosts = uniqBy([...state.posts, ...parsed.channelPosts], 'title');
         const updatedPosts = uniquePosts.map((post) => ((post.id) ? post : { ...post, id: uniqueId(), visited: null }));
         watchedState.posts = [...updatedPosts];
-        watchedState.process = 'input';
       });
     })
     .catch(console.log);

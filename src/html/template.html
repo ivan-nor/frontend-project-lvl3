@@ -8,12 +8,12 @@
 </head>
 
 <body id="point" class="d-flex flex-column min-vh-100">
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="modal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title fw-bold" id="exampleModalLabel"></h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+          <h5 class="modal-title fw-bold" id="modalTitle"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body text-break">
 
@@ -26,7 +26,7 @@
             rel="noopener noreferrer"
             target="_blank"
           >Читать полностью</a>
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"></button>
         </div>
       </div>
     </div>
@@ -37,10 +37,10 @@
         <div class="col-md-10 col-lg-8 mx-auto text-white">
           <h1 id="title" class="h2 display-3 mb-0"></h1>
           <p id="lead" class="lead"></p>
-          <a class="col tempLink" href="#" value="https://ru.hexlet.io/lessons.rss" >https://ru.hexlet.io/lessons.rss</a> | 
+          <!-- <a class="col tempLink" href="#" value="https://ru.hexlet.io/lessons.rss" >https://ru.hexlet.io/lessons.rss</a> | 
           <a class="col tempLink" href="#" value="https://www.sports.ru/rss/topnews.xml" >https://www.sports.ru/rss/topnews.xml</a> | 
           <a class="col tempLink" href="#" value="https://habr.com/ru/rss/best/weekly/?fl=ru" >https://habr.com/ru/rss/best/weekly/?fl=ru</a> | 
-          <a class="col tempLink" href="#" value="генератор RSS" >http://lorem-rss.herokuapp.com/feed?unit=second&interval=30</a>
+          <a class="col tempLink" href="#" value="генератор RSS" >http://lorem-rss.herokuapp.com/feed?unit=second&interval=30</a> -->
           <form action class="rss-form text-body">
             <div class="row">
               <div class="col">
@@ -55,7 +55,7 @@
               </div>
             </div>
           </form>
-          <p id="example" class="mt-2 mb-0 text-muted"></p>
+          <p id="example" class="mt-2 mb-0 text-info"></p>
           <p id="feedback" class="feedback m-0 position-absolute small"></p>
         </div>
       </div>

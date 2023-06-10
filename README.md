@@ -2,7 +2,7 @@
 [![hexlet-check](https://github.com/ivan-nor/frontend-project-lvl3/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/ivan-nor/frontend-project-lvl3/actions/workflows/hexlet-check.yml)
 
 
-![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app={frontend-project-lvl3-lilac-beta})
+![Vercel](https://vercelbadge.vercel.app/api/ivan-nor/frontend-project-lvl3)
 
 ### Example
 

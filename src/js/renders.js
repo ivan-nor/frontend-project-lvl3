@@ -1,40 +1,52 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-param-reassign */
 import { sortBy } from 'lodash';
+import { clickPostHandler } from './controllers';
 
-const renderFeeds = (state, feedsElement, t) => {
-  console.log('RENDER FEEDS called');
-  feedsElement.innerHTML = '';
+const createCardElement = (title) => {
+  const card = document.createElement('div');
+  card.classList.add('card', 'border-0');
 
-  const h2 = document.createElement('h2');
-  h2.textContent = t('feedsName');
+  const cardBody = document.createElement('div');
+  cardBody.classList.add('card-body');
+
+  const cardTitle = document.createElement('h2');
+  cardTitle.classList.add('card-title', 'h4');
+  cardTitle.innerHTML = title;
+  cardBody.append(cardTitle);
 
   const ul = document.createElement('ul');
-  state.feeds.forEach(({ channelTitle, channelDescription }) => {
-    const li = document.createElement('li');
-    li.textContent = `${channelTitle} | ${channelDescription}`;
-    ul.append(li);
-  });
+  ul.classList.add('list-group', 'border-0', 'rounded-0');
 
-  feedsElement.append(h2, ul);
+  card.append(cardBody);
+  card.append(ul);
+
+  return card;
 };
 
-const renderMessage = (state, elements, t) => { // изменить отрисову сообщений
-  // подумать как сделать либо только по ключу отрисовывать разные увета либо
-  // по состоянию лейбла, danger, warning, success, empty
-  // тогда состояния формы, сообдщения ИЛИ только ПРОЦЕСС input success error sending !!!!!
+const renderFeeds = (state, elements, t) => {
+  const { feeds: feedsElement } = elements;
+  feedsElement.innerHTML = '';
 
+  const feedsName = t('feedsName');
+  const feedsCard = createCardElement(feedsName);
+  const feedsUl = feedsCard.querySelector('ul');
+  feedsCard.append(feedsUl);
+
+  state.feeds.forEach(({ channelTitle, channelDescription }) => {
+    const feedsLi = document.createElement('li');
+    feedsLi.textContent = `${channelTitle} | ${channelDescription}`;
+    feedsLi.classList.add('list-group-item', 'border-0', 'border-end-0');
+    feedsUl.append(feedsLi);
+  });
+
+  if (Object.values(state.feeds)) { feedsElement.append(feedsCard); }
+};
+
+const renderMessage = ({ message }, elements, t) => {
   const { feedback } = elements;
-
-  const keyMessage = state.message;
-
-  feedback.innerHTML = (state.message) ? t(`messages.${keyMessage}`) : '';
-  console.log('RENDER FEEDBACK CALLED key message |', keyMessage, '| html |', feedback.innerHTML);
+  feedback.innerHTML = (message) ? t(`messages.${message}`) : '';
 };
 
 const renderForm = (state, elements, t) => {
-  // console.log('RENDER FORM called');
-
   const {
     form, feedback, input, button,
   } = elements;
@@ -45,53 +57,105 @@ const renderForm = (state, elements, t) => {
 
   const processRenders = {
     success: () => {
-      console.log('CALLED PROCESS RENNDERING SUCCESS =>', state.process);
       form.reset();
       input.focus();
       feedback.classList.add('text-success');
     },
     input: () => {
-      console.log('CALLED PROCESS RENNDERING INPUT =>', state.process, state.inputValue.length);
       if (state.inputValue.length > 0) {
         input.classList.add('is-valid');
       }
-      // input.classList.remove('is-valid', 'is-invalid');
     },
     error: () => {
-      console.log('CALLED PROCESS RENNDERING ERROR =>', state.process);
-      // button.classList.add('disabled');
       feedback.classList.add('text-danger');
       input.classList.add('is-invalid');
       input.focus();
     },
     sending: () => {
-      console.log('CALLED PROCESS RENNDERING SENDING =>', state.process);
       button.classList.add('disabled');
       feedback.classList.add('text-warning');
       form.reset();
     },
   };
 
-  processRenders[state.process](); // диспетчеризация отрисовки по процессу
+  processRenders[state.process]();
 };
 
-const renderPosts = (state, postsElement, t) => {
-  console.log('RENDER POSTS Called');
+const renderPosts = (watchedState, elements, t) => {
+  const {
+    posts: postsElement,
+  } = elements;
   postsElement.innerHTML = '';
 
-  const h2 = document.createElement('h2');
-  h2.textContent = t('postsName');
+  const postsName = t('postsName');
+  const postsCard = createCardElement(postsName);
+  const postUl = postsCard.querySelector('ul');
+  postsCard.append(postUl);
 
-  const ul = document.createElement('ul');
-  sortBy(state.posts, (p) => p.id).forEach(({ title, description, link }) => {
-    const li = document.createElement('li');
-    // li.textContent = `${title} \n ${description} \n ${link}`; // попытка пройти тесты
-    li.textContent = `${title}`;
-    ul.append(li);
+  sortBy(watchedState.posts, (p) => p.id)
+    .reverse()
+    .forEach((post) => {
+      const {
+        title, link, id, visited,
+      } = post;
+
+      const postA = document.createElement('a');
+      postA.setAttribute('href', link);
+      postA.setAttribute('target', '_blank');
+      postA.setAttribute('rel', 'noopener noreferrer');
+      postA.setAttribute('data-id', id);
+      postA.className = (visited) ? 'fw-normal link-secondary' : 'fw-bold';
+      postA.textContent = title;
+
+      const postButton = document.createElement('button');
+      postButton.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+      postButton.setAttribute('data-id', id);
+      postButton.setAttribute('type', 'button');
+      postButton.setAttribute('data-bs-toggle', 'modal');
+      postButton.setAttribute('data-bs-target', '#modal');
+      postButton.textContent = t('messages.sending');
+
+      const postsLi = document.createElement('li');
+      postsLi.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0', 'mr-1');
+      postsLi.addEventListener('click', clickPostHandler(post, postsLi, watchedState, t));
+      postsLi.append(postA, postButton);
+
+      postUl.append(postsLi);
+    });
+  if (Object.values(watchedState.posts)) {
+    postsElement.append(postsCard);
+  }
+};
+
+const renderModal = (state, elements) => {
+  const {
+    title: modalTitle,
+    body: modalBody,
+    link: modalLink,
+  } = elements.modal;
+
+  const {
+    title, description, link,
+  } = state.modal;
+
+  modalTitle.textContent = '';
+  modalBody.innerHTML = '';
+  modalLink.setAttribute('href', '#');
+
+  const modalTextContainer = document.createElement('div');
+  modalTextContainer.classList.add('container', 'p-1');
+
+  const descriptionHTML = new DOMParser().parseFromString(description, 'text/html');
+  const imgElements = descriptionHTML.querySelectorAll('img');
+  imgElements.forEach((img) => {
+    img.classList.add('img-fluid');
   });
-  postsElement.append(h2, ul);
+  descriptionHTML.body.childNodes.forEach((el) => modalTextContainer.append(el));
+  modalBody.append(modalTextContainer);
+  modalTitle.textContent = title;
+  modalLink.setAttribute('href', link);
 };
 
 export {
-  renderFeeds, renderMessage, renderPosts, renderForm,
+  renderFeeds, renderMessage, renderPosts, renderForm, renderModal,
 };

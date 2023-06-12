@@ -12,12 +12,12 @@ const getUrl = (url, proxy) => {
   newUrl.searchParams.set('disableCache', 'true');
   newUrl.searchParams.set('url', searchUrl);
   newUrl.pathname = '/get';
-  console.log('GET URL', url, proxy, newUrl.href);
+  // console.log('GET URL', url, proxy, newUrl.href);
   return newUrl;
 };
 
 const requestFeedsResourses = (watchedState) => {
-  console.log('CALL RFR');
+  // console.log('CALL RFR');
   const {
     proxy,
     timerId,

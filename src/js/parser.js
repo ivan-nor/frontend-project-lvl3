@@ -11,7 +11,7 @@ export default (str) => {
   const stringContainingXMLSource = isJsonString(str) ? JSON.parse(str) : str;
   const parserInstanse = new DOMParser();
   const doc = parserInstanse.parseFromString(stringContainingXMLSource, 'application/xml');
-
+  // console.log('PARSER', doc);
   const items = doc.querySelectorAll('item');
   const channelTitle = doc.querySelector('channel > title');
   const channelDescription = doc.querySelector('channel > description');

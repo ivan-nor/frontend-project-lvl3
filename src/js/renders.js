@@ -23,6 +23,7 @@ const createCardElement = (title) => {
 };
 
 const renderFeeds = (state, elements, t) => {
+  // console.log('RENDER FEEDS');
   const { feeds: feedsElement } = elements;
   feedsElement.innerHTML = '';
 
@@ -42,6 +43,7 @@ const renderFeeds = (state, elements, t) => {
 };
 
 const renderMessage = ({ message }, elements, t) => {
+  // console.log('RENDER MESSAGE', message);
   const { feedback } = elements;
   feedback.innerHTML = (message) ? t(`messages.${message}`) : '';
 };
@@ -55,6 +57,7 @@ const renderForm = (state, elements) => {
   button.classList.remove('disabled');
   input.classList.remove('is-valid', 'is-invalid');
 
+  // console.log('RENDER FORM PROCESS', state.process);
   const processRenders = {
     success: () => {
       form.reset();
@@ -82,6 +85,7 @@ const renderForm = (state, elements) => {
 };
 
 const renderPosts = (watchedState, elements, t) => {
+  // console.log('RENDER POSTS');
   const {
     posts: postsElement,
   } = elements;
@@ -128,6 +132,7 @@ const renderPosts = (watchedState, elements, t) => {
 };
 
 const renderModal = (state, elements) => {
+  // console.log('RENDER MODAL');
   const {
     title: modalTitle,
     body: modalBody,

@@ -6,7 +6,7 @@ import './style.scss';
 const point = document.querySelector('#point');
 
 const lng = 'ru';
-const proxy = 'https://allorigins.hexlet.app/get?disableCache=true&url=';
-// const testProxy = 'https://allorigins.hexlet.app';
+// const proxy = 'https://allorigins.hexlet.app/get?disableCache=true&url=';
+const testProxy = 'https://allorigins.hexlet.app/';
 
-init(point, { lng, proxy });
+init(point, { lng, proxy: testProxy });

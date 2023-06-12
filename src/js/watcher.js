@@ -4,7 +4,8 @@ import {
 } from './renders';
 
 export default (elements, state, t) => {
-  function watch(path) {
+  function watch(path, value, previousValue) {
+    // console.log('PATH :>>', path, 'PREVVALUE :>>', previousValue, 'VALUE :>>', value);
     switch (path) {
       case 'process':
         renderForm(state, elements, t);

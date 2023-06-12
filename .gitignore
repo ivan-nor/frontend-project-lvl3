@@ -6,3 +6,6 @@ assets
 tinkoff.js
 /srs/js/Example.js
 /__tests__
+/test-results/
+/playwright-report/
+/playwright/.cache/

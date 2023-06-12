@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable no-param-reassign */
 import axios from 'axios';
 import { uniqBy, uniqueId } from 'lodash';
@@ -86,7 +87,7 @@ const submitHandler = (watchedState) => (event) => {
         }
       })
       .catch((e) => {
-        // console.log('req ERROR', requestURL, e);
+        console.log('req ERROR', requestURL, e);
         watchedState.process = 'error';
         watchedState.message = 'networkError';
       });

@@ -5,6 +5,7 @@ import { inputHandler, submitHandler, requestFeedsResourses } from './controller
 import setWatcher from './watcher.js';
 
 export default (container, initialState = {}) => {
+  // console.log('INIT');
   const { lng = 'ru', proxy = '' } = initialState;
 
   i18n.createInstance({ lng, resources }, (err, t) => {
@@ -41,12 +42,12 @@ export default (container, initialState = {}) => {
       },
     };
 
-    // const tempLinks = container.querySelectorAll('.tempLink'); // затычка для ввода ссылок
-    // tempLinks.forEach((link) => link.addEventListener('click', (event) => {
-    //   event.preventDefault();
-    //   state.inputValue = event.target.textContent;
-    //   elements.input.value = event.target.textContent;
-    // }));
+    const tempLinks = container.querySelectorAll('.tempLink'); // затычка для ввода ссылок
+    tempLinks.forEach((link) => link.addEventListener('click', (event) => {
+      event.preventDefault();
+      state.inputValue = event.target.textContent;
+      elements.input.value = event.target.textContent;
+    }));
 
     const watchedState = setWatcher(elements, state, t);
 

@@ -20,7 +20,7 @@ export default (container, initialState = {}) => {
       posts: [], // { title, description, link, id }
       proxy,
       modal: null,
-      timerId: null,
+      // timerId: null,
     };
 
     const elements = {

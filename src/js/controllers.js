@@ -20,7 +20,7 @@ const requestFeedsResourses = (watchedState) => {
   // console.log('CALL RFR');
   const {
     proxy,
-    timerId,
+    // timerId,
     urls,
     // feeds,
     // posts,
@@ -55,8 +55,9 @@ const requestFeedsResourses = (watchedState) => {
     })
     .catch((e) => console.log('ERROR req ', requests, e));
 
-  clearTimeout(timerId);
-  watchedState.timerId = setTimeout(requestFeedsResourses, 5000, watchedState); // рекурсивный таймер
+  // clearTimeout(timerId);
+  // watchedState.timerId = setTimeout(requestFeedsResourses, 5000, watchedState); // рекурсивный таймер
+  setTimeout(requestFeedsResourses, 5000, watchedState); // рекурсивный таймер
 };
 
 const submitHandler = (watchedState) => (event) => {
@@ -80,7 +81,7 @@ const submitHandler = (watchedState) => (event) => {
           watchedState.urls.push(watchedState.inputValue);
           watchedState.message = 'success';
           watchedState.process = 'success';
-          requestFeedsResourses(watchedState);
+          // requestFeedsResourses(watchedState);
         } else {
           watchedState.process = 'error';
           watchedState.message = 'formatError';

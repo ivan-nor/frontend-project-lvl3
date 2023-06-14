@@ -11,3 +11,4 @@ tinkoff.js
 /playwright-report/
 /playwright/.cache/
 playwright.config.js
+.DS_Store

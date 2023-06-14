@@ -15,9 +15,10 @@ const getUrl = (url, proxy) => {
   // console.log('GET URL', url, proxy, newUrl.href);
   return newUrl;
 };
-
+let counter = 1;
 const requestFeedsResourses = (watchedState) => {
-  // console.log('CALL RFR');
+  console.log('CALL RFR', counter);
+  counter += 1;
   const {
     proxy,
     // timerId,
@@ -34,7 +35,7 @@ const requestFeedsResourses = (watchedState) => {
   Promise.all(requests)
     .then((responses) => {
       responses.forEach((response) => {
-        // console.log('RESPoNse in RFR', response.data);
+        console.log('RESPoNse in RFR', response.data);
         const responseData = (proxy) ? response.data.contents : response.data;
         const parsed = parse(responseData);
 
@@ -53,11 +54,13 @@ const requestFeedsResourses = (watchedState) => {
         watchedState.posts = [...updatedPosts];
       });
     })
-    .catch((e) => console.log('ERROR req ', requests, e));
+    .catch((e) => console.log('ERROR req ', requests, e))
+    .then(() => {
+      setTimeout(requestFeedsResourses, 5000, watchedState);
+    }); // рекурсивный таймер
 
   // clearTimeout(timerId);
   // watchedState.timerId = setTimeout(requestFeedsResourses, 5000, watchedState); // рекурсивный таймер
-  setTimeout(requestFeedsResourses, 5000, watchedState); // рекурсивный таймер
 };
 
 const submitHandler = (watchedState) => (event) => {

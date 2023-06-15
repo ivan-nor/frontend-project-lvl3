@@ -22,7 +22,7 @@ const createCardElement = (title) => {
   return card;
 };
 
-const renderFeeds = (state, elements, t) => {
+const renderFeeds = (watchedState, elements, t) => {
   // console.log('RENDER FEEDS');
   const { feeds: feedsElement } = elements;
   feedsElement.innerHTML = '';
@@ -32,40 +32,41 @@ const renderFeeds = (state, elements, t) => {
   const feedsUl = feedsCard.querySelector('ul');
   feedsCard.append(feedsUl);
 
-  state.feeds.forEach(({ channelTitle, channelDescription }) => {
+  watchedState.feeds.forEach(({ channelTitle, channelDescription }) => {
     const feedsLi = document.createElement('li');
     feedsLi.textContent = `${channelTitle} | ${channelDescription}`;
     feedsLi.classList.add('list-group-item', 'border-0', 'border-end-0');
     feedsUl.append(feedsLi);
   });
 
-  if (Object.values(state.feeds)) { feedsElement.append(feedsCard); }
+  if (Object.values(watchedState.feeds)) { feedsElement.append(feedsCard); }
 };
 
-const renderMessage = ({ message }, elements, t) => {
-  // console.log('RENDER MESSAGE', message);
+const renderErrorMessage = ({ errorMessage }, elements, t) => {
+  // console.log('RENDER MESSAGE', errorMessage, t(`messages.error.${errorMessage}`));
   const { feedback } = elements;
-  feedback.innerHTML = (message) ? t(`messages.${message}`) : '';
+  feedback.innerHTML = (errorMessage) ? t(`messages.error.${errorMessage}`) : '';
 };
 
-const renderForm = (state, elements) => {
+const renderForm = (watchedState, elements, t) => {
   const {
     form, feedback, input, button,
   } = elements;
 
-  feedback.classList.remove('text-success', 'text-danger', 'text-warning');
+  feedback.classList.remove('text-danger', 'text-warning');
   button.classList.remove('disabled');
   input.classList.remove('is-valid', 'is-invalid');
 
-  // console.log('RENDER FORM PROCESS', state.process);
+  // console.log('RENDER FORM PROCESS', watchedState.processFeedAdding);
   const processRenders = {
     success: () => {
       form.reset();
       input.focus();
+      feedback.innerHTML = t('messages.success');
       feedback.classList.add('text-success');
     },
     input: () => {
-      if (state.inputValue.length > 0) {
+      if (watchedState.form.inputValue.length > 0) {
         input.classList.add('is-valid');
       }
     },
@@ -81,7 +82,7 @@ const renderForm = (state, elements) => {
     },
   };
 
-  processRenders[state.process]();
+  processRenders[watchedState.processFeedAdding]();
 };
 
 const renderPosts = (watchedState, elements, t) => {
@@ -99,16 +100,15 @@ const renderPosts = (watchedState, elements, t) => {
   sortBy(watchedState.posts, (p) => p.id)
     .reverse()
     .forEach((post) => {
-      const {
-        title, link, id, visited,
-      } = post;
+      const { title, link, id } = post;
 
+      const isPostVisited = watchedState.uiState.visited.includes(id);
       const postA = document.createElement('a');
       postA.setAttribute('href', link);
       postA.setAttribute('target', '_blank');
       postA.setAttribute('rel', 'noopener noreferrer');
       postA.setAttribute('data-id', id);
-      postA.className = (visited) ? 'fw-normal link-secondary' : 'fw-bold';
+      postA.className = (isPostVisited) ? 'fw-normal link-secondary' : 'fw-bold';
       postA.textContent = title;
 
       const postButton = document.createElement('button');
@@ -131,7 +131,7 @@ const renderPosts = (watchedState, elements, t) => {
   }
 };
 
-const renderModal = (state, elements) => {
+const renderModal = (watchedState, elements) => {
   // console.log('RENDER MODAL');
   const {
     title: modalTitle,
@@ -141,7 +141,7 @@ const renderModal = (state, elements) => {
 
   const {
     title, description, link,
-  } = state.modal;
+  } = watchedState.modal;
 
   modalTitle.textContent = '';
   modalBody.innerHTML = '';
@@ -162,5 +162,5 @@ const renderModal = (state, elements) => {
 };
 
 export {
-  renderFeeds, renderMessage, renderPosts, renderForm, renderModal,
+  renderFeeds, renderErrorMessage, renderPosts, renderForm, renderModal,
 };

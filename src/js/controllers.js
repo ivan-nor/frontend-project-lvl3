@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 /* eslint-disable no-param-reassign */
 import axios from 'axios';
-import { uniqBy, uniqueId } from 'lodash';
-import onChange from 'on-change';
+import { uniqBy } from 'lodash';
+// import onChange from 'on-change';
 import validate from './validator.js';
 import parse from './parser.js';
 
@@ -18,96 +18,79 @@ const getUrl = (url, proxy) => {
 
 const requestFeedsResourses = (watchedState) => {
   // console.log('CALL RFR');
-  const {
-    proxy,
-    // timerId,
-    urls,
-    // feeds,
-    // posts,
-  } = watchedState;
-
-  const state = onChange.target(watchedState);
-
-  const proxiedUrls = urls.map((url) => getUrl(url, proxy));
+  const proxiedUrls = watchedState.feeds.map(({ url }) => getUrl(url, watchedState.proxy));
   const requests = proxiedUrls.map((url) => axios.get(url));
 
   Promise.all(requests)
     .then((responses) => {
       responses.forEach((response) => {
-        // console.log('RESPoNse in RFR', response.data);
-        const responseData = (proxy) ? response.data.contents : response.data;
-        const parsed = parse(responseData);
-
-        // console.log('response.data :>> ', response.data);
+        const parsed = parse(response.data.contents);
+        // console.log('RESPoNse in RFR', response.data.contents);
         // console.log('parsed :>> ', parsed);
 
         const newFeed = {
           channelTitle: parsed.channelTitle,
           channelDescription: parsed.channelDescription,
         };
-        const uniqueFeeds = uniqBy([...state.feeds, newFeed], 'channelTitle');
+        const uniqueFeeds = uniqBy([...watchedState.feeds, newFeed], 'channelTitle');
         watchedState.feeds = [...uniqueFeeds];
 
-        const uniquePosts = uniqBy([...state.posts, ...parsed.channelPosts], 'title');
-        const updatedPosts = uniquePosts.map((post) => ((post.id) ? post : { ...post, id: uniqueId(), visited: null }));
-        watchedState.posts = [...updatedPosts];
+        const uniquePosts = uniqBy([...watchedState.posts, ...parsed.channelPosts], 'title');
+        watchedState.posts = [...uniquePosts];
       });
     })
-    .catch((e) => console.log('ERROR req ', requests, e));
-
-  // clearTimeout(timerId);
-  // watchedState.timerId = setTimeout(requestFeedsResourses, 5000, watchedState); // рекурсивный таймер
-  setTimeout(requestFeedsResourses, 5000, watchedState); // рекурсивный таймер
+    .catch((e) => console.log('ERROR req in RFR', requests, e.message))
+    .then(() => setTimeout(requestFeedsResourses, 5000, watchedState)); // рекурсивный таймер
 };
 
-const submitHandler = (watchedState) => (event) => {
+const submitHandler = (watchedState) => (event) => { // изменить обработку ошибки в парсере, один раз загружать источники, все хранить в feeds
   event.preventDefault();
-  const validateMessage = validate(watchedState.inputValue, watchedState.urls);
+  const urls = watchedState.feeds.map((feed) => feed.url);
+  // console.log('SUBMIT HANDLER', urls);
+  const validateMessage = validate(watchedState.form.inputValue, urls);
   const keyMessage = Object.keys(validateMessage)[0] || '';
-  watchedState.message = keyMessage;
-  watchedState.process = (keyMessage) ? 'error' : 'input';
+  // console.log('validateMessage :>> ', keyMessage);
+  watchedState.errorMessage = keyMessage;
+  watchedState.processFeedAdding = (keyMessage) ? 'error' : 'input';
 
-  if (!watchedState.message) {
-    const requestURL = getUrl(watchedState.inputValue, watchedState.proxy);
+  if (!watchedState.errorMessage) {
+    const requestURL = getUrl(watchedState.form.inputValue, watchedState.proxy);
+    // console.log('REQUEST URL', requestURL.href);
 
     axios.get(requestURL)
       .then((response) => {
-        // console.log('SUBMIT HANDLER', response.data.contents);
-        // console.log('RESPONSE in SUBMIT', (response.data.contents));
-        // const parsed = parse(response.data)
+        // console.log('SUBMIT HANDLER'); // response.data.contents
+        const parsed = parse(response.data.contents); // добавиьт в парсер выброс ошибок
         // console.log('PARSED in SUNBNIT', parsed);
-        // const contentType = response.data.status.content_type;
-        if ((response.data.contents.includes('rss'))) {
-          watchedState.urls.push(watchedState.inputValue);
-          watchedState.message = 'success';
-          watchedState.process = 'success';
-          // requestFeedsResourses(watchedState);
-        } else {
-          watchedState.process = 'error';
-          watchedState.message = 'formatError';
-        }
+        const feed = { ...parsed, url: watchedState.form.inputValue };
+        watchedState.feeds.push(feed);
+        watchedState.posts.push(...parsed.channelPosts);
+        watchedState.processFeedAdding = 'success';
+
+        // requestFeedsResourses(watchedState); // только без обновления, для разработки
       })
-      .catch((e) => {
-        console.log('req ERROR', requestURL, e);
-        watchedState.process = 'error';
-        watchedState.message = 'networkError';
+      .catch((error) => { // в зависимости от ошибки
+        const newErrorMessage = (error.message === 'Network Error') ? 'networkError' : error.message;
+        // console.log('req ERROR', requestURL, '\n', error.message, newErrorMessage);
+        watchedState.processFeedAdding = 'error';
+        watchedState.errorMessage = newErrorMessage;
       });
   }
 };
 
 const inputHandler = (watchedState) => (event) => {
-  // console.log('INPUT HANDLER');
+  // console.log('INPUT HANDLER', event.target.value);
   event.preventDefault();
-  watchedState.inputValue = event.target.value;
+  watchedState.form.inputValue = event.target.value;
 };
 
 const clickPostHandler = (postItem, postElement, watchedState) => (event) => {
-  // console.log('CLICK POST HANDLER');
+  // console.log('CLICK POST HANDLER', postItem, event.target.tagName);
   if (event.target.tagName === 'BUTTON') {
     watchedState.modal = postItem;
   }
 
-  postItem.visited = true;
+  watchedState.uiState.visited.push(postItem.id);
 };
 
 export {

@@ -12,15 +12,19 @@ export default (container, initialState = {}) => {
     if (err) return console.log('something went wrong loading', err);
 
     const state = {
-      process: '', // input, sending, success, error
-      inputValue: '',
-      message: '',
-      urls: [],
-      feeds: [], // { channelTitle }
-      posts: [], // { title, description, link, id }
+      uiState: {
+        visited: [],
+      },
+      form: {
+        inputValue: '',
+        isValid: true,
+      },
+      processFeedAdding: '', // input, sending, success, error
+      errorMessage: '', // ключ ошибки
+      feeds: [], // { channelTitle, channelLink, url, channelDescription }
+      posts: [], // { title, description, link, id, channelId }
       proxy,
       modal: null,
-      // timerId: null,
     };
 
     const elements = {
@@ -47,6 +51,8 @@ export default (container, initialState = {}) => {
       event.preventDefault();
       state.inputValue = event.target.textContent;
       elements.input.value = event.target.textContent;
+      const newEvent = new Event('input');
+      elements.input.dispatchEvent(newEvent);
     }));
 
     const watchedState = setWatcher(elements, state, t);

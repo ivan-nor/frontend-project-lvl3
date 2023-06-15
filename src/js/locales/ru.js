@@ -17,10 +17,12 @@ export default {
     messages: {
       success: 'RSS успешно загружен',
       sending: 'Просмотр',
-      networkError: 'Ошибка сети',
-      formatError: 'Ресурс не содержит валидный RSS',
-      url: 'Ссылка должна быть валидным URL',
-      notOneOf: 'RSS уже существует',
+      error: {
+        networkError: 'Ошибка сети',
+        formatError: 'Ресурс не содержит валидный RSS',
+        url: 'Ссылка должна быть валидным URL',
+        notOneOf: 'RSS уже существует',
+      },
     },
   },
 };

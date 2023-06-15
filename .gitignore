@@ -5,7 +5,10 @@ assets
 /srs/js_older
 tinkoff.js
 /srs/js/Example.js
-/__tests__
+/__tests__/
+/__fixtures__/
 /test-results/
 /playwright-report/
 /playwright/.cache/
+playwright.config.js
+.DS_Store
